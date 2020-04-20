@@ -20,13 +20,12 @@ def get_state(params):
 #############################################################################
 #                        Reward Evaluation Tools                            #
 #############################################################################
-# compute the disimilarity between two 2-d arrays by 1 - SSIM. 
-# todo: match the mesh grids.
+# compute the disimilarity between two 2-d arrays by 1 - SSIM.
 def get_difference(array1, array2, prev_prop_params, prop_params):
     # interpolation array1, so its size is same as array2. 
     shape1 = array1.shape
     shape2 = array2.shape
-    normal_term = max(array1.max(), array2.max())
+    normal_term = max(array1.max(), array2.max()) + 1e-8
     array1, array2 = array1 / normal_term, array2 / normal_term
     # Compute the scale of the two arrays according to the range parameters.
     scale1, scale2 = [1.0, 1.0], [1.0, 1.0]
@@ -58,41 +57,9 @@ def get_complexity(prop_params, alpha=0.005, exponential=True):
     complexity /= len(prop_params)
     return np.exp(alpha * complexity) if exponential else alpha * complexity
 
-# compute the ratio bewtween the central part and the whole part of a 2-d array.
-def get_image_ratio(array, index, edge_ratio=0.4):
-    """
-    edge_ratio: the ratio of edge with respect to the whole array shape.
-    index: the index of tuned parameters.
-    """
-    shape = array.shape
-    array = array.astype(np.float64)
-    array = (array - array.min()) / (array.max() -  array.min())
-    # print(array.min())
-    # print(array)
-    # array = (array > 0.01 * array.max()).astype(float)
-    edge_width = [int(shape[0] * edge_ratio) // 2, int(shape[1] * edge_ratio) // 2]
-    if index[-1] == 5:
-        array_central_horizontal = array[:, edge_width[1]:shape[1] - edge_width[1]]
-        horizontal_ratio = np.mean((array_central_horizontal.sum(axis=1) + 1e-8) / (array.sum(axis=1) + 1e-8))
-        return horizontal_ratio
-    else:
-        array_central_vertical = array[edge_width[0]:shape[0] - edge_width[0], :]
-        vertical_ratio = np.mean((array_central_vertical.sum(axis=0) + 1e-8) / (array.sum(axis=0) + 1e-8))
-        return vertical_ratio
-
-# def get_image_ratio_reward(array, index, edge_ratio=0.2, lowerbound=0.98, upperbound=0.99):
-#     image_ratio = get_image_ratio(array, index, edge_ratio)
-#     lowerbound = max(lowerbound, 1. - edge_ratio)
-#     # print(image_ratio)
-#     if lowerbound <= image_ratio <= upperbound:
-#         return 0.
-#     elif image_ratio < lowerbound:
-#         return np.exp(10 * np.abs(image_ratio - lowerbound))
-#     else:
-#         return np.exp(np.abs(image_ratio - upperbound))
 
 
-def get_image_ratio_reward(array, index, alpha=1e-2):
+def get_image_ratio_reward(array, alpha=1e-2):
     shape = array.shape
     horizontal_range, vertical_range = 0, 0
     threshold = array.max() * alpha
@@ -133,37 +100,73 @@ def get_image_ratio_reward(array, index, alpha=1e-2):
     #     return vertical_range
 
 
-# smooth the data using a window with requested size.
-# copy from: https://scipy-cookbook.readthedocs.io/items/SignalSmooth.html
-def smooth(x, window_len=11, window='hanning'):
-    if x.ndim != 1:
-        raise ValueError("smooth only accepts 1 dimension arrays.")
-    if x.size < window_len:
-        raise ValueError("Input vector needs to be bigger than window size.")
-    if window_len<3:
-        return x
-    if not window in ['flat', 'hanning', 'hamming', 'bartlett', 'blackman']:
-        raise ValueError("Window is on of 'flat', 'hanning', 'hamming', 'bartlett', 'blackman'")
-    s=np.r_[x[window_len-1:0:-1],x,x[-2:-window_len-1:-1]]
-    #print(len(s))
-    if window == 'flat': #moving average
-        w=np.ones(window_len,'d')
-    else:
-        w=eval('np.'+window+'(window_len)')
-    y=np.convolve(w/w.sum(), s, mode='valid')
-    return y
-
-# compute the roughness as the distance of between the smoothed and original inputs.
-def roughness(array, Ln=1):
-    shape = array.shape[0]
-    # smoothed_array = smooth(array)
-    smoothed_array = sci_signal.savgol_filter(array, 5, 1)
-    if Ln == 1:
-        dis = np.abs(smoothed_array - array).mean()
-    elif Ln == 2:
-        dis = (smoothed_array - array) ** 2
-        dis = dis.mean()
-    else:
-        raise ValueError("The current version only support L1 and L2.")
-    return dis
-
+# todo: deprecated.
+# # compute the ratio bewtween the central part and the whole part of a 2-d array.
+# def get_image_ratio(array, index, edge_ratio=0.4):
+#     """
+#     edge_ratio: the ratio of edge with respect to the whole array shape.
+#     index: the index of tuned parameters.
+#     """
+#     shape = array.shape
+#     array = array.astype(np.float64)
+#     array = (array - array.min()) / (array.max() -  array.min())
+#     # print(array.min())
+#     # print(array)
+#     # array = (array > 0.01 * array.max()).astype(float)
+#     edge_width = [int(shape[0] * edge_ratio) // 2, int(shape[1] * edge_ratio) // 2]
+#     # if index[-1] == 5:
+#     #     array_central_horizontal = array[:, edge_width[1]:shape[1] - edge_width[1]]
+#     #     horizontal_ratio = np.mean((array_central_horizontal.sum(axis=1) + 1e-8) / (array.sum(axis=1) + 1e-8))
+#     #     return horizontal_ratio
+#     # else:
+#     #     array_central_vertical = array[edge_width[0]:shape[0] - edge_width[0], :]
+#     #     vertical_ratio = np.mean((array_central_vertical.sum(axis=0) + 1e-8) / (array.sum(axis=0) + 1e-8))
+#     #     return vertical_ratio
+#     array_central_horizontal = array[:, edge_width[1]:shape[1] - edge_width[1]]
+#     horizontal_ratio = np.mean((array_central_horizontal.sum(axis=1) + 1e-8) / (array.sum(axis=1) + 1e-8))
+#     array_central_vertical = array[edge_width[0]:shape[0] - edge_width[0], :]
+#     vertical_ratio = np.mean((array_central_vertical.sum(axis=0) + 1e-8) / (array.sum(axis=0) + 1e-8))
+#     return horizontal_ratio * vertical_ratio
+# def get_image_ratio_reward(array, index, edge_ratio=0.2, lowerbound=0.98, upperbound=0.99):
+#     image_ratio = get_image_ratio(array, index, edge_ratio)
+#     lowerbound = max(lowerbound, 1. - edge_ratio)
+#     # print(image_ratio)
+#     if lowerbound <= image_ratio <= upperbound:
+#         return 0.
+#     elif image_ratio < lowerbound:
+#         return np.exp(10 * np.abs(image_ratio - lowerbound))
+#     else:
+#         return np.exp(np.abs(image_ratio - upperbound))
+# # smooth the data using a window with requested size.
+# # copy from: https://scipy-cookbook.readthedocs.io/items/SignalSmooth.html
+# def smooth(x, window_len=11, window='hanning'):
+#     if x.ndim != 1:
+#         raise ValueError("smooth only accepts 1 dimension arrays.")
+#     if x.size < window_len:
+#         raise ValueError("Input vector needs to be bigger than window size.")
+#     if window_len<3:
+#         return x
+#     if not window in ['flat', 'hanning', 'hamming', 'bartlett', 'blackman']:
+#         raise ValueError("Window is on of 'flat', 'hanning', 'hamming', 'bartlett', 'blackman'")
+#     s=np.r_[x[window_len-1:0:-1],x,x[-2:-window_len-1:-1]]
+#     #print(len(s))
+#     if window == 'flat': #moving average
+#         w=np.ones(window_len,'d')
+#     else:
+#         w=eval('np.'+window+'(window_len)')
+#     y=np.convolve(w/w.sum(), s, mode='valid')
+#     return y
+#
+# # compute the roughness as the distance of between the smoothed and original inputs.
+# def roughness(array, Ln=1):
+#     shape = array.shape[0]
+#     # smoothed_array = smooth(array)
+#     smoothed_array = sci_signal.savgol_filter(array, 5, 1)
+#     if Ln == 1:
+#         dis = np.abs(smoothed_array - array).mean()
+#     elif Ln == 2:
+#         dis = (smoothed_array - array) ** 2
+#         dis = dis.mean()
+#     else:
+#         raise ValueError("The current version only support L1 and L2.")
+#     return dis

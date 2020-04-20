@@ -3,6 +3,7 @@
 # auxiliary functions to optimize the propagation parameters.
 import glob, os, copy
 import numpy as np
+import matplotlib.pyplot as plt
 from utils_reward import *
 from utils_run import *
 from utils_operation import *
@@ -69,7 +70,7 @@ from utils_operation import *
 #     print(tune_params)
 #     return
 
-def grid_search(names, setting_params, physics_params, prop_params, index_list, 
+def grid_search(names, setting_params, physics_params, prop_params, index_list, set_optics,
                 num_points, img_path, min_range=0.5, max_range=5.0, min_resolution=1.0, 
                 max_resolution=10.0):
     # split the range and resolution parameters.
@@ -93,7 +94,7 @@ def grid_search(names, setting_params, physics_params, prop_params, index_list,
         best_quality = 0
         for i in range(num_points):
             updata_param(prop_params, index, v[i])
-            run_experiment(names, setting_params, physics_params, prop_params)
+            run_experiment(names, setting_params, physics_params, prop_params, set_optics)
             # check the image list after running the experiment.
             if img_list is None:
                 img_list = glob.glob(os.path.join(img_path, "*.dat"))                  # read the saved experiment results.
@@ -106,7 +107,8 @@ def grid_search(names, setting_params, physics_params, prop_params, index_list,
             #
             if prev_prop_params is None:
                 prev_prop_params = copy.deepcopy(prop_params)
-            quality = np.mean([get_difference(prev, img, prev_prop_params, prop_params) for prev, img in zip(prev_imgs, imgs)]) + prev_quality
+            quality = np.mean([get_difference(prev, img, prev_prop_params, prop_params)
+                               for prev, img in zip(prev_imgs, imgs)]) + prev_quality
             complexity = get_complexity(prop_params)
             img_reward = img_ratios * quality / complexity
             print(index, '\t', v[i], '\t', img_reward)
@@ -122,23 +124,34 @@ def grid_search(names, setting_params, physics_params, prop_params, index_list,
     print(tune_params)
     return
 
-# todo: performance is worse than grid search.
-def coordinate_ascent(names, setting_params, physics_params, prop_params, index_list, 
+# todo: update this function: we don't need to consider the visual range of the signal.
+# todo: instead, we find the mesh (value>=0.01 * maximum) of the new image, project the old image into the new image and compare.
+# coordinate ascent optimization.
+def coordinate_ascent(names, setting_params, physics_params, prop_params, index_list, set_optics,
                 img_path, step_size=0.20, min_range=0.5, max_range=5.0, min_resolution=1.0, 
                 max_resolution=10.0):
     # set the parameters to the minimum.
     index_list = [tuple(index) for index in index_list]
-    for index in index_list:
-        min_value = min_resolution if index[-1] == 6 or index[-1] == 8 else min_range
-        updata_param(prop_params, index, min_value)
-    run_experiment(names, setting_params, physics_params, prop_params)
+    # for index in index_list:
+    #     min_value = min_resolution if index[-1] == 6 or index[-1] == 8 else min_range
+    #     updata_param(prop_params, index, min_value)
+    #
+    run_experiment(names, setting_params, physics_params, prop_params, set_optics)
     img_list = glob.glob(os.path.join(img_path, "*.dat"))                  # read the saved experiment results.
     img_list.remove(os.path.join(img_path, "res_int_se.dat"))
-    #
+    # initialize the optimization.
     tune_params = {}
     prev_prop_params = copy.deepcopy(prop_params)
-    prev_imgs, prev_quality = [read_dat(path)[0] for path in img_list], 0
-    global_best_reward, global_best_ratio = 0, 0
+    imgs, prev_quality = [read_dat(path)[0] for path in img_list], 0
+    prev_imgs = [np.zeros_like(img) for img in imgs]
+    # compute the retio, reward and complexity.
+    global_best_ratio = np.mean([get_image_ratio_reward(img) for img in imgs])
+    #
+    quality = np.mean([get_difference(prev, img, prop_params, prop_params)
+                       for prev, img in zip(prev_imgs, imgs)]) + prev_quality
+    complexity = get_complexity(prop_params)
+    global_best_reward = quality / complexity
+    prev_imgs, prev_quality = imgs, quality
     # check whether the index list is valid.
     for index in index_list:
         if index[-1] < 5 or index[-1] > 8:                         # range.
@@ -162,13 +175,15 @@ def coordinate_ascent(names, setting_params, physics_params, prop_params, index_
                 if new_value < min_value or new_value > max_value:
                     continue
                 updata_param(prop_params, index, new_value)
-                run_experiment(names, setting_params, physics_params, prop_params)
+                run_experiment(names, setting_params, physics_params, prop_params, set_optics)
+                plt.close()
                 # check the image list after running the experiment.
                 imgs = [read_dat(path)[0] for path in img_list]
                 # compute the retio, reward and complexity.
-                img_ratios = np.mean([get_image_ratio_reward(img, index) for img in imgs])
+                img_ratios = np.mean([get_image_ratio_reward(img) for img in imgs])
                 #
-                quality = np.mean([get_difference(prev, img, prev_prop_params, prop_params) for prev, img in zip(prev_imgs, imgs)]) + prev_quality
+                quality = np.mean([get_difference(prev, img, prev_prop_params, prop_params)
+                                   for prev, img in zip(prev_imgs, imgs)]) + prev_quality
                 complexity = get_complexity(prop_params)
                 img_reward = quality / complexity
                 print(index, '\t', new_value, '\t', img_reward, '\t', img_ratios)
@@ -191,4 +206,38 @@ def coordinate_ascent(names, setting_params, physics_params, prop_params, index_
                 updata_param(prop_params, index, prev_value)
         updates = new_updates
     print(tune_params)
-    return
+    return tune_params
+
+
+
+# todo:
+# # whether a string is in the begining of the other.
+# def InSting(pattern, str):
+#     if len(str) < len(pattern):
+#         return False
+#     return str[0:len(pattern)] == pattern
+
+# # Greedily optimize each optics instruments by coordinate ascent.
+# def coordinate_ascent_greedy(names, setting_params, physics_params, prop_params, index_list,
+#                 img_path, step_size=0.20, min_range=0.5, max_range=5.0, min_resolution=1.0,
+#                 max_resolution=10.0):
+#     N, opticsID = len(names), 1
+#     # optimizing optics instruments one-by-one.
+#     while opticsID <= N - 1:
+#         optics = 'op_' + names[opticsID-1]
+#         next_optics = 'op_' + names[opticsID]
+#         part_names = copy.deepcopy(names[0:opticsID])
+#         part_prop_params = copy.deepcopy(prop_params[0:opticsID] + prop_params[-1:])
+#         part_physics_params = copy.deepcopy(physics_params)
+#         for i in range(len(part_physics_params)-1, -1, -1):
+#             # tag = InSting(optics, part_physics_params[i][0])
+#             if not InSting(optics, part_physics_params[i][0]) or InSting(next_optics, part_physics_params[i][0]):
+#                 part_physics_params.pop(-1)
+#             else:
+#                 break
+#         part_index = [index for index in index_list if index[0] == opticsID - 1]
+#         coordinate_ascent(part_names, setting_params, part_physics_params, part_prop_params, part_index,
+#                     min_range=min_range, max_range=max_range, min_resolution=min_resolution,
+#                     max_resolution=max_resolution, step_size=step_size, img_path=img_path)
+#         print()
+#     return

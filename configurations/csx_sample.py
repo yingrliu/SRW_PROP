@@ -1,32 +1,39 @@
 #!/usr/bin/env python
 import os
+import srwl_bl
 import srwlib
 
-names = ['Aperture', 'Aperture_HFM', 'HFM', 'HFM_SSA', 'SSA', 'SSA_KB_Aperture', 'KB_Aperture', 'KBv', 'KBv_KBh', 'KBh', 'KBh_Sample', 'Sample']
+names = ['Fixed_Mask', 'Fixed_Mask_M1A', 'M1A', 'M1A_Watchpoint', 'Watchpoint', 'M2A_VDM', 'M2A_VDM_Grating', 'Grating',
+         'Grating_Aperture', 'Aperture', 'Watchpoint2', 'M3A_HFM', 'M3A_HFM_Watchpoint3', 'Watchpoint3', 'Pinhole',
+         'Watchpoint4', 'Watchpoint4_Sample', 'Sample']
 
 setting_params = [
-    ['name', 's', 'NSLS-II FMX beamline', 'simulation name'],
-#---Data Folder
+    ['name', 's', 'NSLS-II CSX-1 beamline', 'simulation name'],
+    # ---Data Folder
     ['fdir', 's', 'cache', 'folder (directory) name for reading-in input and saving output data files']
 ]
 
 # tunable list.
-index_list = [(0, 5), (0, 6), (0, 7), (0, 8), (4, 6)]
+index_list = list(reversed([(0, 5), (0, 7), (10, 6), (10, 8), (11, 5), (11, 6), (11, 7), (11, 8),
+              (12, 5), (12, 6), (12, 7), (12, 8), (13, 5), (13, 6), (13, 7), (13, 8)]))
 
 propagation_params = [
-    #---Propagation parameters
-    ['op_Aperture_pp', 'f',        [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'Aperture'],
-    ['op_Aperture_HFM_pp', 'f',    [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'Aperture_HFM'],
-    ['op_HFM_pp', 'f',             [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'HFM'],
-    ['op_HFM_SSA_pp', 'f',         [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'HFM_SSA'],
-    ['op_SSA_pp', 'f',             [0, 0, 1.0, 0, 0, 1.0, 6.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'SSA'],
-    ['op_SSA_KB_Aperture_pp', 'f', [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'SSA_KB_Aperture'],
-    ['op_KB_Aperture_pp', 'f',     [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KB_Aperture'],
-    ['op_KBv_pp', 'f',             [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBv'],
-    ['op_KBv_KBh_pp', 'f',         [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBv_KBh'],
-    ['op_KBh_pp', 'f',             [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBh'],
-    ['op_KBh_Sample_pp', 'f',      [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBh_Sample'],
-    ['op_fin_pp', 'f',             [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'final post-propagation (resize) parameters'],
+#---Propagation parameters
+    ['op_Fixed_Mask_pp', 'f',          [0, 0, 1.0, 0, 0, 1.3, 1.0, 1.3, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'Fixed_Mask'],
+    ['op_Fixed_Mask_M1A_pp', 'f',      [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'Fixed_Mask_M1A'],
+    ['op_M1A_pp', 'f',                 [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'M1A'],
+    ['op_M1A_Watchpoint_pp', 'f',      [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'M1A_Watchpoint'],
+    ['op_M2A_VDM_pp', 'f',             [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'M2A_VDM'],
+    ['op_M2A_VDM_Grating_pp', 'f',     [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'M2A_VDM_Grating'],
+    ['op_Grating_pp', 'f',             [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0580381, 0.998314, 1.0, 0.0], 'Grating'],
+    ['op_Grating_Aperture_pp', 'f',    [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'Grating_Aperture'],
+    ['op_Aperture_pp', 'f',            [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'Aperture'],
+    ['op_M3A_HFM_pp', 'f',             [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'M3A_HFM'],
+    ['op_M3A_HFM_Watchpoint3_pp', 'f', [0, 0, 1.0, 1, 0, 1.0, 8.0, 1.0, 16.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'M3A_HFM_Watchpoint3'],
+    ['op_Pinhole_pp', 'f',             [0, 0, 1.0, 0, 0, 0.1, 20.0, 0.1, 4.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'Pinhole'],
+    ['op_Watchpoint4_Sample_pp', 'f',  [0, 0, 1.0, 3, 0, 0.3, 1.0, 0.3, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'Watchpoint4_Sample'],
+    ['op_fin_pp', 'f',                 [0, 0, 1.0, 0, 0, 0.2, 1.0, 0.35, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'final post-propagation (resize) parameters'],
+
     #[ 0]: Auto-Resize (1) or not (0) Before propagation
     #[ 1]: Auto-Resize (1) or not (0) After propagation
     #[ 2]: Relative Precision for propagation with Auto-Resizing (1. is nominal)
@@ -47,7 +54,7 @@ propagation_params = [
 ]
 
 physics_params = [
-    #---Electron Beam
+#---Electron Beam
     ['ebm_nm', 's', '', 'standard electron beam name'],
     ['ebm_nms', 's', '', 'standard electron beam name suffix: e.g. can be Day1, Final'],
     ['ebm_i', 'f', 0.5, 'electron beam current [A]'],
@@ -58,36 +65,40 @@ physics_params = [
     ['ebm_xp', 'f', 0.0, 'electron beam initial average horizontal angle [rad]'],
     ['ebm_yp', 'f', 0.0, 'electron beam initial average vertical angle [rad]'],
     ['ebm_z', 'f', 0., 'electron beam initial average longitudinal position [m]'],
-    ['ebm_dr', 'f', -0.79275, 'electron beam longitudinal drift [m] to be performed before a required calculation'],
+    ['ebm_dr', 'f', -1.0234, 'electron beam longitudinal drift [m] to be performed before a required calculation'],
     ['ebm_ens', 'f', 0.00089, 'electron beam relative energy spread'],
-    ['ebm_emx', 'f', 5.5e-10, 'electron beam horizontal emittance [m]'],
+    ['ebm_emx', 'f', 7.6e-10, 'electron beam horizontal emittance [m]'],
     ['ebm_emy', 'f', 8e-12, 'electron beam vertical emittance [m]'],
     # Definition of the beam through Twiss:
-    ['ebm_betax', 'f', 2.02, 'horizontal beta-function [m]'],
-    ['ebm_betay', 'f', 1.06, 'vertical beta-function [m]'],
+    ['ebm_betax', 'f', 1.84, 'horizontal beta-function [m]'],
+    ['ebm_betay', 'f', 1.17, 'vertical beta-function [m]'],
     ['ebm_alphax', 'f', 0.0, 'horizontal alpha-function [rad]'],
     ['ebm_alphay', 'f', 0.0, 'vertical alpha-function [rad]'],
     ['ebm_etax', 'f', 0.0, 'horizontal dispersion function [m]'],
     ['ebm_etay', 'f', 0.0, 'vertical dispersion function [m]'],
     ['ebm_etaxp', 'f', 0.0, 'horizontal dispersion function derivative [rad]'],
     ['ebm_etayp', 'f', 0.0, 'vertical dispersion function derivative [rad]'],
-    #---Undulator
+
+#---Undulator
     ['und_bx', 'f', 0.0, 'undulator horizontal peak magnetic field [T]'],
-    ['und_by', 'f', 0.80371, 'undulator vertical peak magnetic field [T]'],
+    ['und_by', 'f', 0.3513, 'undulator vertical peak magnetic field [T]'],
     ['und_phx', 'f', 0.0, 'initial phase of the horizontal magnetic field [rad]'],
     ['und_phy', 'f', 0.0, 'initial phase of the vertical magnetic field [rad]'],
     ['und_b2e', '', '', 'estimate undulator fundamental photon energy (in [eV]) for the amplitude of sinusoidal magnetic field defined by und_b or und_bx, und_by', 'store_true'],
     ['und_e2b', '', '', 'estimate undulator field amplitude (in [T]) for the photon energy defined by w_e', 'store_true'],
-    ['und_per', 'f', 0.021, 'undulator period [m]'],
-    ['und_len', 'f', 1.5015, 'undulator length [m]'],
+    ['und_per', 'f', 0.0492, 'undulator period [m]'],
+    ['und_len', 'f', 1.85, 'undulator length [m]'],
     ['und_zc', 'f', 1.25, 'undulator center longitudinal position [m]'],
-    ['und_sx', 'i', 1, 'undulator horizontal magnetic field symmetry vs longitudinal position'],
-    ['und_sy', 'i', -1, 'undulator vertical magnetic field symmetry vs longitudinal position'],
+    ['und_sx', 'i', -1, 'undulator horizontal magnetic field symmetry vs longitudinal position'],
+    ['und_sy', 'i', 1, 'undulator vertical magnetic field symmetry vs longitudinal position'],
     ['und_g', 'f', 6.72, 'undulator gap [mm] (assumes availability of magnetic measurement or simulation data)'],
     ['und_ph', 'f', 0.0, 'shift of magnet arrays [mm] for which the field should be set up'],
     ['und_mdir', 's', '', 'name of magnetic measurements sub-folder'],
     ['und_mfs', 's', '', 'name of magnetic measurements for different gaps summary file'],
-    #---Calculation Types
+
+
+
+#---Calculation Types
     # Electron Trajectory
     ['tr', '', '', 'calculate electron trajectory', 'store_true'],
     ['tr_cti', 'f', 0.0, 'initial time moment (c*t) for electron trajectory calculation [m]'],
@@ -99,9 +110,9 @@ physics_params = [
 
     #Single-Electron Spectrum vs Photon Energy
     ['ss', '', '', 'calculate single-e spectrum vs photon energy', 'store_true'],
-    ['ss_ei', 'f', 100.0, 'initial photon energy [eV] for single-e spectrum vs photon energy calculation'],
-    ['ss_ef', 'f', 20000.0, 'final photon energy [eV] for single-e spectrum vs photon energy calculation'],
-    ['ss_ne', 'i', 10000, 'number of points vs photon energy for single-e spectrum vs photon energy calculation'],
+    ['ss_ei', 'f', 10.0, 'initial photon energy [eV] for single-e spectrum vs photon energy calculation'],
+    ['ss_ef', 'f', 2000.0, 'final photon energy [eV] for single-e spectrum vs photon energy calculation'],
+    ['ss_ne', 'i', 2000, 'number of points vs photon energy for single-e spectrum vs photon energy calculation'],
     ['ss_x', 'f', 0.0, 'horizontal position [m] for single-e spectrum vs photon energy calculation'],
     ['ss_y', 'f', 0.0, 'vertical position [m] for single-e spectrum vs photon energy calculation'],
     ['ss_meth', 'i', 1, 'method to use for single-e spectrum vs photon energy calculation: 0- "manual", 1- "auto-undulator", 2- "auto-wiggler"'],
@@ -115,14 +126,14 @@ physics_params = [
 
     #Multi-Electron Spectrum vs Photon Energy (taking into account e-beam emittance, energy spread and collection aperture size)
     ['sm', '', '', 'calculate multi-e spectrum vs photon energy', 'store_true'],
-    ['sm_ei', 'f', 100.0, 'initial photon energy [eV] for multi-e spectrum vs photon energy calculation'],
-    ['sm_ef', 'f', 20000.0, 'final photon energy [eV] for multi-e spectrum vs photon energy calculation'],
-    ['sm_ne', 'i', 10000, 'number of points vs photon energy for multi-e spectrum vs photon energy calculation'],
+    ['sm_ei', 'f', 10.0, 'initial photon energy [eV] for multi-e spectrum vs photon energy calculation'],
+    ['sm_ef', 'f', 2000.0, 'final photon energy [eV] for multi-e spectrum vs photon energy calculation'],
+    ['sm_ne', 'i', 2000, 'number of points vs photon energy for multi-e spectrum vs photon energy calculation'],
     ['sm_x', 'f', 0.0, 'horizontal center position [m] for multi-e spectrum vs photon energy calculation'],
-    ['sm_rx', 'f', 0.001, 'range of horizontal position / horizontal aperture size [m] for multi-e spectrum vs photon energy calculation'],
+    ['sm_rx', 'f', 0.003, 'range of horizontal position / horizontal aperture size [m] for multi-e spectrum vs photon energy calculation'],
     ['sm_nx', 'i', 1, 'number of points vs horizontal position for multi-e spectrum vs photon energy calculation'],
     ['sm_y', 'f', 0.0, 'vertical center position [m] for multi-e spectrum vs photon energy calculation'],
-    ['sm_ry', 'f', 0.001, 'range of vertical position / vertical aperture size [m] for multi-e spectrum vs photon energy calculation'],
+    ['sm_ry', 'f', 0.003, 'range of vertical position / vertical aperture size [m] for multi-e spectrum vs photon energy calculation'],
     ['sm_ny', 'i', 1, 'number of points vs vertical position for multi-e spectrum vs photon energy calculation'],
     ['sm_mag', 'i', 1, 'magnetic field to be used for calculation of multi-e spectrum spectrum or intensity distribution: 1- approximate, 2- accurate'],
     ['sm_hi', 'i', 1, 'initial UR spectral harmonic to be taken into account for multi-e spectrum vs photon energy calculation'],
@@ -144,10 +155,10 @@ physics_params = [
     #Power Density Distribution vs horizontal and vertical position
     ['pw', '', '', 'calculate SR power density distribution', 'store_true'],
     ['pw_x', 'f', 0.0, 'central horizontal position [m] for calculation of power density distribution vs horizontal and vertical position'],
-    ['pw_rx', 'f', 0.015, 'range of horizontal position [m] for calculation of power density distribution vs horizontal and vertical position'],
+    ['pw_rx', 'f', 0.03, 'range of horizontal position [m] for calculation of power density distribution vs horizontal and vertical position'],
     ['pw_nx', 'i', 100, 'number of points vs horizontal position for calculation of power density distribution'],
     ['pw_y', 'f', 0.0, 'central vertical position [m] for calculation of power density distribution vs horizontal and vertical position'],
-    ['pw_ry', 'f', 0.015, 'range of vertical position [m] for calculation of power density distribution vs horizontal and vertical position'],
+    ['pw_ry', 'f', 0.03, 'range of vertical position [m] for calculation of power density distribution vs horizontal and vertical position'],
     ['pw_ny', 'i', 100, 'number of points vs vertical position for calculation of power density distribution'],
     ['pw_pr', 'f', 1.0, 'precision factor for calculation of power density distribution'],
     ['pw_meth', 'i', 1, 'power density computation method (1- "near field", 2- "far field")'],
@@ -164,16 +175,16 @@ physics_params = [
     #Multi-Electron (partially-coherent) Wavefront Propagation
     ['wm', '', '', 'calculate multi-electron (/ partially coherent) wavefront propagation', 'store_true'],
 
-    ['w_e', 'f', 12707.91, 'photon energy [eV] for calculation of intensity distribution vs horizontal and vertical position'],
+    ['w_e', 'f', 750.0, 'photon energy [eV] for calculation of intensity distribution vs horizontal and vertical position'],
     ['w_ef', 'f', -1.0, 'final photon energy [eV] for calculation of intensity distribution vs horizontal and vertical position'],
     ['w_ne', 'i', 1, 'number of points vs photon energy for calculation of intensity distribution'],
     ['w_x', 'f', 0.0, 'central horizontal position [m] for calculation of intensity distribution'],
-    ['w_rx', 'f', 0.0004, 'range of horizontal position [m] for calculation of intensity distribution'],
-    ['w_nx', 'i', 201, 'number of points vs horizontal position for calculation of intensity distribution'],
+    ['w_rx', 'f', 0.004, 'range of horizontal position [m] for calculation of intensity distribution'],
+    ['w_nx', 'i', 100, 'number of points vs horizontal position for calculation of intensity distribution'],
     ['w_y', 'f', 0.0, 'central vertical position [m] for calculation of intensity distribution vs horizontal and vertical position'],
-    ['w_ry', 'f', 0.0004, 'range of vertical position [m] for calculation of intensity distribution vs horizontal and vertical position'],
-    ['w_ny', 'i', 201, 'number of points vs vertical position for calculation of intensity distribution'],
-    ['w_smpf', 'f', 1.0, 'sampling factor for calculation of intensity distribution vs horizontal and vertical position'],
+    ['w_ry', 'f', 0.004, 'range of vertical position [m] for calculation of intensity distribution vs horizontal and vertical position'],
+    ['w_ny', 'i', 100, 'number of points vs vertical position for calculation of intensity distribution'],
+    ['w_smpf', 'f', 0.3, 'sampling factor for calculation of intensity distribution vs horizontal and vertical position'],
     ['w_meth', 'i', 1, 'method to use for calculation of intensity distribution vs horizontal and vertical position: 0- "manual", 1- "auto-undulator", 2- "auto-wiggler"'],
     ['w_prec', 'f', 0.01, 'relative precision for calculation of intensity distribution vs horizontal and vertical position'],
     ['w_u', 'i', 1, 'electric field units: 0- arbitrary, 1- sqrt(Phot/s/0.1%bw/mm^2), 2- sqrt(J/eV/mm^2) or sqrt(W/mm^2), depending on representation (freq. or time)'],
@@ -186,7 +197,7 @@ physics_params = [
     ['ws_fni', 's', 'res_int_pr_se.dat', 'file name for saving propagated single-e intensity distribution vs horizontal and vertical position'],
     ['ws_pl', 's', '', 'plot the resulting intensity distributions in graph(s): ""- dont plot, "x"- vs horizontal position, "y"- vs vertical position, "xy"- vs horizontal and vertical position'],
 
-    ['wm_nm', 'i', 100000, 'number of macro-electrons (coherent wavefronts) for calculation of multi-electron wavefront propagation'],
+    ['wm_nm', 'i', 30000, 'number of macro-electrons (coherent wavefronts) for calculation of multi-electron wavefront propagation'],
     ['wm_na', 'i', 5, 'number of macro-electrons (coherent wavefronts) to average on each node for parallel (MPI-based) calculation of multi-electron wavefront propagation'],
     ['wm_ns', 'i', 5, 'saving periodicity (in terms of macro-electrons / coherent wavefronts) for intermediate intensity at multi-electron wavefront propagation calculation'],
     ['wm_ch', 'i', 0, 'type of a characteristic to be extracted after calculation of multi-electron wavefront propagation: #0- intensity (s0); 1- four Stokes components; 2- mutual intensity cut vs x; 3- mutual intensity cut vs y; 40- intensity(s0), mutual intensity cuts and degree of coherence vs X & Y'],
@@ -199,106 +210,196 @@ physics_params = [
     ['wm_fni', 's', 'res_int_pr_me.dat', 'file name for saving propagated multi-e intensity distribution vs horizontal and vertical position'],
 
     #to add options
-    ['op_r', 'f', 20.0, 'longitudinal position of the first optical element [m]'],
+    ['op_r', 'f', 26.2, 'longitudinal position of the first optical element [m]'],
 
     # Former appParam:
     ['rs_type', 's', 'u', 'source type, (u) idealized undulator, (t), tabulated undulator, (m) multipole, (g) gaussian beam'],
 
-    #---Beamline optics:
+#---Beamline optics:
+    # Fixed_Mask: aperture
+    ['op_Fixed_Mask_shape', 's', 'r', 'shape'],
+    ['op_Fixed_Mask_Dx', 'f', 0.005, 'horizontalSize'],
+    ['op_Fixed_Mask_Dy', 'f', 0.005, 'verticalSize'],
+    ['op_Fixed_Mask_x', 'f', 0.0, 'horizontalOffset'],
+    ['op_Fixed_Mask_y', 'f', 0.0, 'verticalOffset'],
+
+    # Fixed_Mask_M1A: drift
+    ['op_Fixed_Mask_M1A_L', 'f', 1.0, 'length'],
+
+    # M1A: mirror
+    ['op_M1A_hfn', 's', 'configurations/csx_mirror_1d.dat', 'heightProfileFile'],
+    ['op_M1A_dim', 's', 'x', 'orientation'],
+    ['op_M1A_ang', 'f', 0.0218166, 'grazingAngle'],
+    ['op_M1A_amp_coef', 'f', 0.01, 'heightAmplification'],
+    ['op_M1A_size_x', 'f', 0.00545, 'horizontalTransverseSize'],
+    ['op_M1A_size_y', 'f', 0.025, 'verticalTransverseSize'],
+
+    # M1A_Watchpoint: drift
+    ['op_M1A_Watchpoint_L', 'f', 13.2, 'length'],
+
+    # M2A_VDM: mirror
+    ['op_M2A_VDM_hfn', 's', 'configurations/csx_mirror_1d.dat', 'heightProfileFile'],
+    ['op_M2A_VDM_dim', 's', 'y', 'orientation'],
+    ['op_M2A_VDM_ang', 'f', 0.0290353, 'grazingAngle'],
+    ['op_M2A_VDM_amp_coef', 'f', 0.01, 'heightAmplification'],
+    ['op_M2A_VDM_size_x', 'f', 0.025, 'horizontalTransverseSize'],
+    ['op_M2A_VDM_size_y', 'f', 0.1, 'verticalTransverseSize'],
+
+    # M2A_VDM_Grating: drift
+    ['op_M2A_VDM_Grating_L', 'f', 0.06, 'length'],
+
+    # Grating: grating
+    ['op_Grating_size_tang', 'f', 0.3, 'tangentialSize'],
+    ['op_Grating_size_sag', 'f', 0.015, 'sagittalSize'],
+    ['op_Grating_nvx', 'f', 0.0, 'normalVectorX'],
+    ['op_Grating_nvy', 'f', 0.999657108688, 'normalVectorY'],
+    ['op_Grating_nvz', 'f', -0.0261852066962, 'normalVectorZ'],
+    ['op_Grating_tvx', 'f', 0.0, 'tangentialVectorX'],
+    ['op_Grating_tvy', 'f', 0.0261852066962, 'tangentialVectorY'],
+    ['op_Grating_x', 'f', 0.0, 'horizontalOffset'],
+    ['op_Grating_y', 'f', 0.0, 'verticalOffset'],
+    ['op_Grating_m', 'f', 1.0, 'diffractionOrder'],
+    ['op_Grating_grDen', 'f', 100.0, 'grooveDensity0'],
+    ['op_Grating_grDen1', 'f', 0.0548, 'grooveDensity1'],
+    ['op_Grating_grDen2', 'f', 3.9e-06, 'grooveDensity2'],
+    ['op_Grating_grDen3', 'f', 0.0, 'grooveDensity3'],
+    ['op_Grating_grDen4', 'f', 0.0, 'grooveDensity4'],
+
+    # Grating_Aperture: drift
+    ['op_Grating_Aperture_L', 'f', 2.0, 'length'],
+
     # Aperture: aperture
     ['op_Aperture_shape', 's', 'r', 'shape'],
-    ['op_Aperture_Dx', 'f', 0.0015, 'horizontalSize'],
-    ['op_Aperture_Dy', 'f', 0.0015, 'verticalSize'],
+    ['op_Aperture_Dx', 'f', 0.001, 'horizontalSize'],
+    ['op_Aperture_Dy', 'f', 0.001, 'verticalSize'],
     ['op_Aperture_x', 'f', 0.0, 'horizontalOffset'],
     ['op_Aperture_y', 'f', 0.0, 'verticalOffset'],
 
-    # Aperture_HFM: drift
-    ['op_Aperture_HFM_L', 'f', 22.0, 'length'],
+    # M3A_HFM: sphericalMirror
+    ['op_M3A_HFM_hfn', 's', '', 'heightProfileFile'],
+    ['op_M3A_HFM_dim', 's', 'x', 'orientation'],
+    ['op_M3A_HFM_r', 'f', 846.5455704, 'radius'],
+    ['op_M3A_HFM_size_tang', 'f', 0.3, 'tangentialSize'],
+    ['op_M3A_HFM_size_sag', 'f', 0.1, 'sagittalSize'],
+    ['op_M3A_HFM_ang', 'f', 0.0218166, 'grazingAngle'],
+    ['op_M3A_HFM_nvx', 'f', 0.999762027421, 'normalVectorX'],
+    ['op_M3A_HFM_nvy', 'f', 0.0, 'normalVectorY'],
+    ['op_M3A_HFM_nvz', 'f', -0.0218148693884, 'normalVectorZ'],
+    ['op_M3A_HFM_tvx', 'f', 0.0218148693884, 'tangentialVectorX'],
+    ['op_M3A_HFM_tvy', 'f', 0.0, 'tangentialVectorY'],
+    ['op_M3A_HFM_amp_coef', 'f', 1.0, 'heightAmplification'],
+    ['op_M3A_HFM_x', 'f', 0.0, 'horizontalOffset'],
+    ['op_M3A_HFM_y', 'f', 0.0, 'verticalOffset'],
 
-    # HFM: sphericalMirror
-    ['op_HFM_hfn', 's', 'None', 'heightProfileFile'],
-    ['op_HFM_dim', 's', 'x', 'orientation'],
-    ['op_HFM_r', 'f', 1410.0, 'radius'],
-    ['op_HFM_size_tang', 'f', 0.5, 'tangentialSize'],
-    ['op_HFM_size_sag', 'f', 0.11, 'sagittalSize'],
-    ['op_HFM_ang', 'f', 0.0139626, 'grazingAngle'],
-    ['op_HFM_nvx', 'f', 0.999902524484, 'normalVectorX'],
-    ['op_HFM_nvy', 'f', 0.0, 'normalVectorY'],
-    ['op_HFM_nvz', 'f', -0.0139621463265, 'normalVectorZ'],
-    ['op_HFM_tvx', 'f', 0.0139621463265, 'tangentialVectorX'],
-    ['op_HFM_tvy', 'f', 0.0, 'tangentialVectorY'],
-    ['op_HFM_amp_coef', 'f', 1.0, 'heightAmplification'],
-    ['op_HFM_x', 'f', 0.0, 'horizontalOffset'],
-    ['op_HFM_y', 'f', 0.0, 'verticalOffset'],
+    # M3A_HFM_Watchpoint3: drift
+    ['op_M3A_HFM_Watchpoint3_L', 'f', 11.9, 'length'],
 
-    # HFM_SSA: drift
-    ['op_HFM_SSA_L', 'f', 13.0, 'length'],
+    # Pinhole: aperture
+    ['op_Pinhole_shape', 's', 'c', 'shape'],
+    ['op_Pinhole_Dx', 'f', 1e-05, 'horizontalSize'],
+    ['op_Pinhole_Dy', 'f', 1e-05, 'verticalSize'],
+    ['op_Pinhole_x', 'f', 0.0, 'horizontalOffset'],
+    ['op_Pinhole_y', 'f', 0.0, 'verticalOffset'],
 
-    # SSA: aperture
-    ['op_SSA_shape', 's', 'r', 'shape'],
-    ['op_SSA_Dx', 'f', 3e-05, 'horizontalSize'],
-    ['op_SSA_Dy', 'f', 0.01, 'verticalSize'],
-    ['op_SSA_x', 'f', 0.0, 'horizontalOffset'],
-    ['op_SSA_y', 'f', 0.0, 'verticalOffset'],
-
-    # SSA_KB_Aperture: drift
-    ['op_SSA_KB_Aperture_L', 'f', 11.0, 'length'],
-
-    # KB_Aperture: aperture
-    ['op_KB_Aperture_shape', 's', 'r', 'shape'],
-    ['op_KB_Aperture_Dx', 'f', 0.00125, 'horizontalSize'],
-    ['op_KB_Aperture_Dy', 'f', 0.00125, 'verticalSize'],
-    ['op_KB_Aperture_x', 'f', 0.0, 'horizontalOffset'],
-    ['op_KB_Aperture_y', 'f', 0.0, 'verticalOffset'],
-
-    # KBv: ellipsoidMirror
-    ['op_KBv_hfn', 's', '', 'heightProfileFile'],
-    ['op_KBv_dim', 's', 'x', 'orientation'],
-    ['op_KBv_p', 'f', 66.0, 'firstFocusLength'],
-    ['op_KBv_q', 'f', 1.0, 'focalLength'],
-    ['op_KBv_ang', 'f', 0.0025, 'grazingAngle'],
-    ['op_KBv_amp_coef', 'f', 1.0, 'heightAmplification'],
-    ['op_KBv_size_tang', 'f', 0.5, 'tangentialSize'],
-    ['op_KBv_size_sag', 'f', 0.01, 'sagittalSize'],
-    ['op_KBv_nvx', 'f', 0.999996875002, 'normalVectorX'],
-    ['op_KBv_nvy', 'f', 0.0, 'normalVectorY'],
-    ['op_KBv_nvz', 'f', -0.00249999739583, 'normalVectorZ'],
-    ['op_KBv_tvx', 'f', -0.00249999739583, 'tangentialVectorX'],
-    ['op_KBv_tvy', 'f', 0.0, 'tangentialVectorY'],
-    ['op_KBv_x', 'f', 0.0, 'horizontalOffset'],
-    ['op_KBv_y', 'f', 0.0, 'verticalOffset'],
-
-    # KBv_KBh: drift
-    ['op_KBv_KBh_L', 'f', 0.5, 'length'],
-
-    # KBh: ellipsoidMirror
-    ['op_KBh_hfn', 's', 'None', 'heightProfileFile'],
-    ['op_KBh_dim', 's', 'x', 'orientation'],
-    ['op_KBh_p', 'f', 11.5, 'firstFocusLength'],
-    ['op_KBh_q', 'f', 0.5, 'focalLength'],
-    ['op_KBh_ang', 'f', 0.0025, 'grazingAngle'],
-    ['op_KBh_amp_coef', 'f', 1.0, 'heightAmplification'],
-    ['op_KBh_size_tang', 'f', 0.5, 'tangentialSize'],
-    ['op_KBh_size_sag', 'f', 1e+40, 'sagittalSize'],
-    ['op_KBh_nvx', 'f', 0.999996875002, 'normalVectorX'],
-    ['op_KBh_nvy', 'f', 0.0, 'normalVectorY'],
-    ['op_KBh_nvz', 'f', -0.00249999739583, 'normalVectorZ'],
-    ['op_KBh_tvx', 'f', -0.00249999739583, 'tangentialVectorX'],
-    ['op_KBh_tvy', 'f', 0.0, 'tangentialVectorY'],
-    ['op_KBh_x', 'f', 0.0, 'horizontalOffset'],
-    ['op_KBh_y', 'f', 0.0, 'verticalOffset'],
-
-    # KBh_Sample: drift
-    ['op_KBh_Sample_L', 'f', 0.5, 'length'],
+    # Watchpoint4_Sample: drift
+    ['op_Watchpoint4_Sample_L', 'f', 1.14, 'length'],
 ]
 
-# set optics parameters. copy from Sirepo website.
 def set_optics(names, v=None):
     el = []
     pp = []
     for el_name in names:
-        if el_name == 'Aperture':
-            # Aperture: aperture 20.0m
+        if el_name == 'Fixed_Mask':
+            # Fixed_Mask: aperture 26.2m
+            el.append(srwlib.SRWLOptA(
+                _shape=v.op_Fixed_Mask_shape,
+                _ap_or_ob='a',
+                _Dx=v.op_Fixed_Mask_Dx,
+                _Dy=v.op_Fixed_Mask_Dy,
+                _x=v.op_Fixed_Mask_x,
+                _y=v.op_Fixed_Mask_y,
+            ))
+            pp.append(v.op_Fixed_Mask_pp)
+        elif el_name == 'Fixed_Mask_M1A':
+            # Fixed_Mask_M1A: drift 26.2m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_Fixed_Mask_M1A_L,
+            ))
+            pp.append(v.op_Fixed_Mask_M1A_pp)
+        elif el_name == 'M1A':
+            # M1A: mirror 27.2m
+            mirror_file = v.op_M1A_hfn
+            assert os.path.isfile(mirror_file), \
+                'Missing input file {}, required by M1A beamline element'.format(mirror_file)
+            el.append(srwlib.srwl_opt_setup_surf_height_1d(
+                srwlib.srwl_uti_read_data_cols(mirror_file, "\t", 0, 1),
+                _dim=v.op_M1A_dim,
+                _ang=abs(v.op_M1A_ang),
+                _amp_coef=v.op_M1A_amp_coef,
+                _size_x=v.op_M1A_size_x,
+                _size_y=v.op_M1A_size_y,
+            ))
+            pp.append(v.op_M1A_pp)
+        elif el_name == 'M1A_Watchpoint':
+            # M1A_Watchpoint: drift 27.2m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_M1A_Watchpoint_L,
+            ))
+            pp.append(v.op_M1A_Watchpoint_pp)
+        elif el_name == 'Watchpoint':
+            # Watchpoint: watch 40.4m
+            pass
+        elif el_name == 'M2A_VDM':
+            # M2A_VDM: mirror 40.4m
+            mirror_file = v.op_M2A_VDM_hfn
+            assert os.path.isfile(mirror_file), \
+                'Missing input file {}, required by M2A_VDM beamline element'.format(mirror_file)
+            el.append(srwlib.srwl_opt_setup_surf_height_1d(
+                srwlib.srwl_uti_read_data_cols(mirror_file, "\t", 0, 1),
+                _dim=v.op_M2A_VDM_dim,
+                _ang=abs(v.op_M2A_VDM_ang),
+                _amp_coef=v.op_M2A_VDM_amp_coef,
+                _size_x=v.op_M2A_VDM_size_x,
+                _size_y=v.op_M2A_VDM_size_y,
+            ))
+            pp.append(v.op_M2A_VDM_pp)
+        elif el_name == 'M2A_VDM_Grating':
+            # M2A_VDM_Grating: drift 40.4m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_M2A_VDM_Grating_L,
+            ))
+            pp.append(v.op_M2A_VDM_Grating_pp)
+        elif el_name == 'Grating':
+            # Grating: grating 40.46m
+            mirror = srwlib.SRWLOptMirPl(
+                _size_tang=v.op_Grating_size_tang,
+                _size_sag=v.op_Grating_size_sag,
+                _nvx=v.op_Grating_nvx,
+                _nvy=v.op_Grating_nvy,
+                _nvz=v.op_Grating_nvz,
+                _tvx=v.op_Grating_tvx,
+                _tvy=v.op_Grating_tvy,
+                _x=v.op_Grating_x,
+                _y=v.op_Grating_y,
+            )
+            el.append(srwlib.SRWLOptG(
+                _mirSub=mirror,
+                _m=v.op_Grating_m,
+                _grDen=v.op_Grating_grDen,
+                _grDen1=v.op_Grating_grDen1,
+                _grDen2=v.op_Grating_grDen2,
+                _grDen3=v.op_Grating_grDen3,
+                _grDen4=v.op_Grating_grDen4,
+            ))
+            pp.append(v.op_Grating_pp)
+        elif el_name == 'Grating_Aperture':
+            # Grating_Aperture: drift 40.46m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_Grating_Aperture_L,
+            ))
+            pp.append(v.op_Grating_Aperture_pp)
+        elif el_name == 'Aperture':
+            # Aperture: aperture 42.46m
             el.append(srwlib.SRWLOptA(
                 _shape=v.op_Aperture_shape,
                 _ap_or_ob='a',
@@ -308,112 +409,56 @@ def set_optics(names, v=None):
                 _y=v.op_Aperture_y,
             ))
             pp.append(v.op_Aperture_pp)
-        elif el_name == 'Aperture_HFM':
-            # Aperture_HFM: drift 20.0m
-            el.append(srwlib.SRWLOptD(
-                _L=v.op_Aperture_HFM_L,
-            ))
-            pp.append(v.op_Aperture_HFM_pp)
-        elif el_name == 'HFM':
-            # HFM: sphericalMirror 42.0m
+        elif el_name == 'Watchpoint2':
+            # Watchpoint2: watch 42.46m
+            pass
+        elif el_name == 'M3A_HFM':
+            # M3A_HFM: sphericalMirror 42.46m
             el.append(srwlib.SRWLOptMirSph(
-                _r=v.op_HFM_r,
-                _size_tang=v.op_HFM_size_tang,
-                _size_sag=v.op_HFM_size_sag,
-                _nvx=v.op_HFM_nvx,
-                _nvy=v.op_HFM_nvy,
-                _nvz=v.op_HFM_nvz,
-                _tvx=v.op_HFM_tvx,
-                _tvy=v.op_HFM_tvy,
-                _x=v.op_HFM_x,
-                _y=v.op_HFM_y,
+                _r=v.op_M3A_HFM_r,
+                _size_tang=v.op_M3A_HFM_size_tang,
+                _size_sag=v.op_M3A_HFM_size_sag,
+                _nvx=v.op_M3A_HFM_nvx,
+                _nvy=v.op_M3A_HFM_nvy,
+                _nvz=v.op_M3A_HFM_nvz,
+                _tvx=v.op_M3A_HFM_tvx,
+                _tvy=v.op_M3A_HFM_tvy,
+                _x=v.op_M3A_HFM_x,
+                _y=v.op_M3A_HFM_y,
             ))
-            pp.append(v.op_HFM_pp)
+            pp.append(v.op_M3A_HFM_pp)
 
-        elif el_name == 'HFM_SSA':
-            # HFM_SSA: drift 42.0m
+        elif el_name == 'M3A_HFM_Watchpoint3':
+            # M3A_HFM_Watchpoint3: drift 42.46m
             el.append(srwlib.SRWLOptD(
-                _L=v.op_HFM_SSA_L,
+                _L=v.op_M3A_HFM_Watchpoint3_L,
             ))
-            pp.append(v.op_HFM_SSA_pp)
-        elif el_name == 'SSA':
-            # SSA: aperture 55.0m
+            pp.append(v.op_M3A_HFM_Watchpoint3_pp)
+        elif el_name == 'Watchpoint3':
+            # Watchpoint3: watch 54.36m
+            pass
+        elif el_name == 'Pinhole':
+            # Pinhole: aperture 54.36m
             el.append(srwlib.SRWLOptA(
-                _shape=v.op_SSA_shape,
+                _shape=v.op_Pinhole_shape,
                 _ap_or_ob='a',
-                _Dx=v.op_SSA_Dx,
-                _Dy=v.op_SSA_Dy,
-                _x=v.op_SSA_x,
-                _y=v.op_SSA_y,
+                _Dx=v.op_Pinhole_Dx,
+                _Dy=v.op_Pinhole_Dy,
+                _x=v.op_Pinhole_x,
+                _y=v.op_Pinhole_y,
             ))
-            pp.append(v.op_SSA_pp)
-        elif el_name == 'SSA_KB_Aperture':
-            # SSA_KB_Aperture: drift 55.0m
+            pp.append(v.op_Pinhole_pp)
+        elif el_name == 'Watchpoint4':
+            # Watchpoint4: watch 54.36m
+            pass
+        elif el_name == 'Watchpoint4_Sample':
+            # Watchpoint4_Sample: drift 54.36m
             el.append(srwlib.SRWLOptD(
-                _L=v.op_SSA_KB_Aperture_L,
+                _L=v.op_Watchpoint4_Sample_L,
             ))
-            pp.append(v.op_SSA_KB_Aperture_pp)
-        elif el_name == 'KB_Aperture':
-            # KB_Aperture: aperture 66.0m
-            el.append(srwlib.SRWLOptA(
-                _shape=v.op_KB_Aperture_shape,
-                _ap_or_ob='a',
-                _Dx=v.op_KB_Aperture_Dx,
-                _Dy=v.op_KB_Aperture_Dy,
-                _x=v.op_KB_Aperture_x,
-                _y=v.op_KB_Aperture_y,
-            ))
-            pp.append(v.op_KB_Aperture_pp)
-        elif el_name == 'KBv':
-            # KBv: ellipsoidMirror 66.0m
-            el.append(srwlib.SRWLOptMirEl(
-                _p=v.op_KBv_p,
-                _q=v.op_KBv_q,
-                _ang_graz=v.op_KBv_ang,
-                _size_tang=v.op_KBv_size_tang,
-                _size_sag=v.op_KBv_size_sag,
-                _nvx=v.op_KBv_nvx,
-                _nvy=v.op_KBv_nvy,
-                _nvz=v.op_KBv_nvz,
-                _tvx=v.op_KBv_tvx,
-                _tvy=v.op_KBv_tvy,
-                _x=v.op_KBv_x,
-                _y=v.op_KBv_y,
-            ))
-            pp.append(v.op_KBv_pp)
-
-        elif el_name == 'KBv_KBh':
-            # KBv_KBh: drift 66.0m
-            el.append(srwlib.SRWLOptD(
-                _L=v.op_KBv_KBh_L,
-            ))
-            pp.append(v.op_KBv_KBh_pp)
-        elif el_name == 'KBh':
-            # KBh: ellipsoidMirror 66.5m
-            el.append(srwlib.SRWLOptMirEl(
-                _p=v.op_KBh_p,
-                _q=v.op_KBh_q,
-                _ang_graz=v.op_KBh_ang,
-                _size_tang=v.op_KBh_size_tang,
-                _size_sag=v.op_KBh_size_sag,
-                _nvx=v.op_KBh_nvx,
-                _nvy=v.op_KBh_nvy,
-                _nvz=v.op_KBh_nvz,
-                _tvx=v.op_KBh_tvx,
-                _tvy=v.op_KBh_tvy,
-                _x=v.op_KBh_x,
-                _y=v.op_KBh_y,
-            ))
-            pp.append(v.op_KBh_pp)
-
-        elif el_name == 'KBh_Sample':
-            # KBh_Sample: drift 66.5m
-            el.append(srwlib.SRWLOptD(
-                _L=v.op_KBh_Sample_L,
-            ))
-            pp.append(v.op_KBh_Sample_pp)
+            pp.append(v.op_Watchpoint4_Sample_pp)
         elif el_name == 'Sample':
-            # Sample: watch 67.0m
+            # Sample: watch 55.5m
             pass
     pp.append(v.op_fin_pp)
     return srwlib.SRWLOptC(el, pp)

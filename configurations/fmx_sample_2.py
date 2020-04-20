@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import srwlib
 
 names = ['Aperture', 'Aperture_HFM', 'HFM', 'Watchpoint', 'Watchpoint_Watchpoint2', 'Watchpoint2', 'SSA', 'SSA_Watchpoint3', 'Watchpoint3', 'KB_Aperture', 'KB_Aperture_KBh', 'KBh', 'KBh_Sample', 'Sample']
        
@@ -9,11 +10,11 @@ setting_params = [
 ]
 
 # tunable list.
-index_list = [(0, 5), (0, 6), (0, 7), (0, 8), (4, 6), (10, 5), (10, 6), (10, 7), (10, 8)]
+index_list = [(0, 5), (0, 6), (0, 7), (0, 8), (4, 6), (10, 5), (10, 7)]
 
 propagation_params = [
     #---Propagation parameters
-    ['op_Aperture_pp', 'f',               [0, 0, 1.0, 0, 0, 3.0, 8.0, 2.0, 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'Aperture'],
+    ['op_Aperture_pp', 'f',               [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'Aperture'],
     ['op_Aperture_HFM_pp', 'f',           [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'Aperture_HFM'],
     ['op_HFM_pp', 'f',                    [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'HFM'],
     ['op_Watchpoint_Watchpoint2_pp', 'f', [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'Watchpoint_Watchpoint2'],
@@ -23,7 +24,7 @@ propagation_params = [
     ['op_KB_Aperture_KBh_pp', 'f',        [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KB_Aperture_KBh'],
     ['op_KBh_pp', 'f',                    [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBh'],
     ['op_KBh_Sample_pp', 'f',             [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBh_Sample'],
-    ['op_fin_pp', 'f',                    [0, 0, 1.0, 0, 0, 0.2, 2.0, 0.2, 4.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'final post-propagation (resize) parameters'],
+    ['op_fin_pp', 'f',                    [0, 0, 1.0, 0, 0, 0.2, 3.5, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'final post-propagation (resize) parameters'],
 
     #[ 0]: Auto-Resize (1) or not (0) Before propagation
     #[ 1]: Auto-Resize (1) or not (0) After propagation
@@ -276,3 +277,119 @@ physics_params = [
     # KBh_Sample: drift
     ['op_KBh_Sample_L', 'f', 0.5, 'length'],
 ]
+
+def set_optics(names, v=None):
+    el = []
+    pp = []
+    for el_name in names:
+        if el_name == 'Aperture':
+            # Aperture: aperture 20.0m
+            el.append(srwlib.SRWLOptA(
+                _shape=v.op_Aperture_shape,
+                _ap_or_ob='a',
+                _Dx=v.op_Aperture_Dx,
+                _Dy=v.op_Aperture_Dy,
+                _x=v.op_Aperture_x,
+                _y=v.op_Aperture_y,
+            ))
+            pp.append(v.op_Aperture_pp)
+        elif el_name == 'Aperture_HFM':
+            # Aperture_HFM: drift 20.0m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_Aperture_HFM_L,
+            ))
+            pp.append(v.op_Aperture_HFM_pp)
+        elif el_name == 'HFM':
+            # HFM: sphericalMirror 42.0m
+            el.append(srwlib.SRWLOptMirSph(
+                _r=v.op_HFM_r,
+                _size_tang=v.op_HFM_size_tang,
+                _size_sag=v.op_HFM_size_sag,
+                _nvx=v.op_HFM_nvx,
+                _nvy=v.op_HFM_nvy,
+                _nvz=v.op_HFM_nvz,
+                _tvx=v.op_HFM_tvx,
+                _tvy=v.op_HFM_tvy,
+                _x=v.op_HFM_x,
+                _y=v.op_HFM_y,
+            ))
+            pp.append(v.op_HFM_pp)
+
+        elif el_name == 'Watchpoint':
+            # Watchpoint: watch 42.0m
+            pass
+        elif el_name == 'Watchpoint_Watchpoint2':
+            # Watchpoint_Watchpoint2: drift 42.0m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_Watchpoint_Watchpoint2_L,
+            ))
+            pp.append(v.op_Watchpoint_Watchpoint2_pp)
+        elif el_name == 'Watchpoint2':
+            # Watchpoint2: watch 55.0m
+            pass
+        elif el_name == 'SSA':
+            # SSA: aperture 55.0m
+            el.append(srwlib.SRWLOptA(
+                _shape=v.op_SSA_shape,
+                _ap_or_ob='a',
+                _Dx=v.op_SSA_Dx,
+                _Dy=v.op_SSA_Dy,
+                _x=v.op_SSA_x,
+                _y=v.op_SSA_y,
+            ))
+            pp.append(v.op_SSA_pp)
+        elif el_name == 'SSA_Watchpoint3':
+            # SSA_Watchpoint3: drift 55.0m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_SSA_Watchpoint3_L,
+            ))
+            pp.append(v.op_SSA_Watchpoint3_pp)
+        elif el_name == 'Watchpoint3':
+            # Watchpoint3: watch 66.0m
+            pass
+        elif el_name == 'KB_Aperture':
+            # KB_Aperture: aperture 66.0m
+            el.append(srwlib.SRWLOptA(
+                _shape=v.op_KB_Aperture_shape,
+                _ap_or_ob='a',
+                _Dx=v.op_KB_Aperture_Dx,
+                _Dy=v.op_KB_Aperture_Dy,
+                _x=v.op_KB_Aperture_x,
+                _y=v.op_KB_Aperture_y,
+            ))
+            pp.append(v.op_KB_Aperture_pp)
+        elif el_name == 'KB_Aperture_KBh':
+            # KB_Aperture_KBh: drift 66.0m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_KB_Aperture_KBh_L,
+            ))
+            pp.append(v.op_KB_Aperture_KBh_pp)
+        elif el_name == 'KBh':
+            # KBh: ellipsoidMirror 66.5m
+            el.append(srwlib.SRWLOptMirEl(
+                _p=v.op_KBh_p,
+                _q=v.op_KBh_q,
+                _ang_graz=v.op_KBh_ang,
+                _size_tang=v.op_KBh_size_tang,
+                _size_sag=v.op_KBh_size_sag,
+                _nvx=v.op_KBh_nvx,
+                _nvy=v.op_KBh_nvy,
+                _nvz=v.op_KBh_nvz,
+                _tvx=v.op_KBh_tvx,
+                _tvy=v.op_KBh_tvy,
+                _x=v.op_KBh_x,
+                _y=v.op_KBh_y,
+            ))
+            pp.append(v.op_KBh_pp)
+
+        elif el_name == 'KBh_Sample':
+            # KBh_Sample: drift 66.5m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_KBh_Sample_L,
+            ))
+            pp.append(v.op_KBh_Sample_pp)
+        elif el_name == 'Sample':
+            # Sample: watch 67.0m
+            pass
+    pp.append(v.op_fin_pp)
+    return srwlib.SRWLOptC(el, pp)

@@ -1,6 +1,9 @@
 #!/usr/bin/env python
+import os
+import srwlib
 
-names = ['Aperture', 'Aperture_HFM', 'HFM', 'Watchpoint']
+names = ['S0', 'S0_HDM', 'HDM', 'HDM_S1', 'S1', 'S1_S2', 'S2', 'S2_CRL1', 'CRL1',
+         'CRL2', 'CRL2_KLA', 'KLA', 'KL', 'KL_S3', 'S3', 'S3_Sample', 'Sample']
    
 setting_params = [
     ['name', 's', 'NSLS-II CHX beamline', 'simulation name'],   
@@ -225,7 +228,8 @@ physics_params = [
     ['op_S0_HDM_L', 'f', 6.9, 'length'],
 
     # HDM: mirror
-    ['op_HDM_hfn', 's', 'mirror_1d.dat', 'heightProfileFile'],
+    # todo: Change the path of mirror_1d.dat if necessary.
+    ['op_HDM_hfn', 's', 'configurations/chx_mirror_1d.dat', 'heightProfileFile'],
     ['op_HDM_dim', 's', 'x', 'orientation'],
     ['op_HDM_ang', 'f', 0.0031415926, 'grazingAngle'],
     ['op_HDM_amp_coef', 'f', 1.0, 'heightAmplification'],
@@ -310,3 +314,165 @@ physics_params = [
     # S3_Sample: drift
     ['op_S3_Sample_L', 'f', 0.7, 'length'],
 ]
+
+def set_optics(names, v=None):
+    el = []
+    pp = []
+    for el_name in names:
+        if el_name == 'S0':
+            # S0: aperture 20.5m
+            el.append(srwlib.SRWLOptA(
+                _shape=v.op_S0_shape,
+                _ap_or_ob='a',
+                _Dx=v.op_S0_Dx,
+                _Dy=v.op_S0_Dy,
+                _x=v.op_S0_x,
+                _y=v.op_S0_y,
+            ))
+            pp.append(v.op_S0_pp)
+        elif el_name == 'S0_HDM':
+            # S0_HDM: drift 20.5m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_S0_HDM_L,
+            ))
+            pp.append(v.op_S0_HDM_pp)
+        elif el_name == 'HDM':
+            # HDM: mirror 27.4m
+            mirror_file = v.op_HDM_hfn
+            assert os.path.isfile(mirror_file), \
+                'Missing input file {}, required by HDM beamline element'.format(mirror_file)
+            el.append(srwlib.srwl_opt_setup_surf_height_1d(
+                srwlib.srwl_uti_read_data_cols(mirror_file, "\t", 0, 1),
+                _dim=v.op_HDM_dim,
+                _ang=abs(v.op_HDM_ang),
+                _amp_coef=v.op_HDM_amp_coef,
+                _size_x=v.op_HDM_size_x,
+                _size_y=v.op_HDM_size_y,
+            ))
+            pp.append(v.op_HDM_pp)
+        elif el_name == 'HDM_S1':
+            # HDM_S1: drift 27.4m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_HDM_S1_L,
+            ))
+            pp.append(v.op_HDM_S1_pp)
+        elif el_name == 'S1':
+            # S1: aperture 29.9m
+            el.append(srwlib.SRWLOptA(
+                _shape=v.op_S1_shape,
+                _ap_or_ob='a',
+                _Dx=v.op_S1_Dx,
+                _Dy=v.op_S1_Dy,
+                _x=v.op_S1_x,
+                _y=v.op_S1_y,
+            ))
+            pp.append(v.op_S1_pp)
+        elif el_name == 'S1_S2':
+            # S1_S2: drift 29.9m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_S1_S2_L,
+            ))
+            pp.append(v.op_S1_S2_pp)
+        elif el_name == 'S2':
+            # S2: aperture 34.3m
+            el.append(srwlib.SRWLOptA(
+                _shape=v.op_S2_shape,
+                _ap_or_ob='a',
+                _Dx=v.op_S2_Dx,
+                _Dy=v.op_S2_Dy,
+                _x=v.op_S2_x,
+                _y=v.op_S2_y,
+            ))
+            pp.append(v.op_S2_pp)
+        elif el_name == 'S2_CRL1':
+            # S2_CRL1: drift 34.3m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_S2_CRL1_L,
+            ))
+            pp.append(v.op_S2_CRL1_pp)
+        elif el_name == 'CRL1':
+            # CRL1: crl 35.4m
+            el.append(srwlib.srwl_opt_setup_CRL(
+                _foc_plane=v.op_CRL1_foc_plane,
+                _delta=v.op_CRL1_delta,
+                _atten_len=v.op_CRL1_atten_len,
+                _shape=v.op_CRL1_shape,
+                _apert_h=v.op_CRL1_apert_h,
+                _apert_v=v.op_CRL1_apert_v,
+                _r_min=v.op_CRL1_r_min,
+                _n=v.op_CRL1_n,
+                _wall_thick=v.op_CRL1_wall_thick,
+                _xc=v.op_CRL1_x,
+                _yc=v.op_CRL1_y,
+            ))
+            pp.append(v.op_CRL1_pp)
+        elif el_name == 'CRL2':
+            # CRL2: crl 35.4m
+            el.append(srwlib.srwl_opt_setup_CRL(
+                _foc_plane=v.op_CRL2_foc_plane,
+                _delta=v.op_CRL2_delta,
+                _atten_len=v.op_CRL2_atten_len,
+                _shape=v.op_CRL2_shape,
+                _apert_h=v.op_CRL2_apert_h,
+                _apert_v=v.op_CRL2_apert_v,
+                _r_min=v.op_CRL2_r_min,
+                _n=v.op_CRL2_n,
+                _wall_thick=v.op_CRL2_wall_thick,
+                _xc=v.op_CRL2_x,
+                _yc=v.op_CRL2_y,
+            ))
+            pp.append(v.op_CRL2_pp)
+        elif el_name == 'CRL2_KLA':
+            # CRL2_KLA: drift 35.4m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_CRL2_KLA_L,
+            ))
+            pp.append(v.op_CRL2_KLA_pp)
+        elif el_name == 'KLA':
+            # KLA: aperture 44.5m
+            el.append(srwlib.SRWLOptA(
+                _shape=v.op_KLA_shape,
+                _ap_or_ob='a',
+                _Dx=v.op_KLA_Dx,
+                _Dy=v.op_KLA_Dy,
+                _x=v.op_KLA_x,
+                _y=v.op_KLA_y,
+            ))
+            pp.append(v.op_KLA_pp)
+        elif el_name == 'KL':
+            # KL: lens 44.5m
+            el.append(srwlib.SRWLOptL(
+                _Fx=v.op_KL_Fx,
+                _Fy=v.op_KL_Fy,
+                _x=v.op_KL_x,
+                _y=v.op_KL_y,
+            ))
+            pp.append(v.op_KL_pp)
+        elif el_name == 'KL_S3':
+            # KL_S3: drift 44.5m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_KL_S3_L,
+            ))
+            pp.append(v.op_KL_S3_pp)
+        elif el_name == 'S3':
+            # S3: aperture 48.0m
+            el.append(srwlib.SRWLOptA(
+                _shape=v.op_S3_shape,
+                _ap_or_ob='a',
+                _Dx=v.op_S3_Dx,
+                _Dy=v.op_S3_Dy,
+                _x=v.op_S3_x,
+                _y=v.op_S3_y,
+            ))
+            pp.append(v.op_S3_pp)
+        elif el_name == 'S3_Sample':
+            # S3_Sample: drift 48.0m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_S3_Sample_L,
+            ))
+            pp.append(v.op_S3_Sample_pp)
+        elif el_name == 'Sample':
+            # Sample: watch 48.7m
+            pass
+    pp.append(v.op_fin_pp)
+    return srwlib.SRWLOptC(el, pp)
