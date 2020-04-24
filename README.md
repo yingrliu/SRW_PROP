@@ -16,6 +16,17 @@ and change the path as `PATH_TO_SRW\env\work\srw_python` in `SRW.pth` to the pat
 the git.
 
 ## #20200405
-- Coordinate ascent method works fine on `CHX`, `ESM` and `FMX` beamlines.
-- Coordinate ascent method unable to run on `CSX` beamline. The reason is  for 
+- Two-reward paradigm works fine on `CHX`, `ESM` and `FMX` beamlines.
+- Two-reward paradigm is unable to run on `CSX` beamline. The reason is  for 
 the initial values, the output image is blank. 
+
+## #20200420
+- Use an unified loss function for all parameters.
+- Coordinate Ascent method works on `FMX`, `FMX-2`, `ESM`, `CHX`, `HXN`, `SMI`.
+- Dont't work on `CSX` because the image is all zero if the parameters are not appropriate.
+- Have less satisfied result on `SRX`.
+- Should we tune the alpha parameters of the reward for different expriments?
+
+Questions:
+- In `HXN`, `SRX' file, there are several generated `.dat` files, should we consider all of them? Some 
+files lose the dimension information.

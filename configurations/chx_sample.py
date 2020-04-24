@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+import srwl_bl
 import srwlib
 
 names = ['S0', 'S0_HDM', 'HDM', 'HDM_S1', 'S1', 'S1_S2', 'S2', 'S2_CRL1', 'CRL1',
@@ -315,7 +316,7 @@ physics_params = [
     ['op_S3_Sample_L', 'f', 0.7, 'length'],
 ]
 
-def set_optics(names, v=None):
+def set_optics(v=None):
     el = []
     pp = []
     for el_name in names:
@@ -476,3 +477,6 @@ def set_optics(names, v=None):
             pass
     pp.append(v.op_fin_pp)
     return srwlib.SRWLOptC(el, pp)
+
+# set-up functions.
+set_up_funcs = [set_optics]

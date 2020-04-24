@@ -1,5 +1,8 @@
 #!/usr/bin/env python
+import srwl_bl
 import srwlib
+import srwlpy
+import srwl_uti_smp
 
 names = ['Aperture', 'Aperture_HFM', 'HFM', 'Watchpoint', 'Watchpoint_Watchpoint2', 'Watchpoint2', 'SSA', 'SSA_Watchpoint3', 'Watchpoint3', 'KB_Aperture', 'KB_Aperture_KBh', 'KBh', 'KBh_Sample', 'Sample']
        
@@ -278,7 +281,7 @@ physics_params = [
     ['op_KBh_Sample_L', 'f', 0.5, 'length'],
 ]
 
-def set_optics(names, v=None):
+def set_optics(v=None):
     el = []
     pp = []
     for el_name in names:
@@ -393,3 +396,6 @@ def set_optics(names, v=None):
             pass
     pp.append(v.op_fin_pp)
     return srwlib.SRWLOptC(el, pp)
+
+# set-up functions.
+set_up_funcs = [set_optics]

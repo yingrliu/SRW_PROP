@@ -305,7 +305,7 @@ physics_params = [
     ['op_Watchpoint4_Sample_L', 'f', 1.14, 'length'],
 ]
 
-def set_optics(names, v=None):
+def set_optics(v=None):
     el = []
     pp = []
     for el_name in names:
@@ -462,3 +462,6 @@ def set_optics(names, v=None):
             pass
     pp.append(v.op_fin_pp)
     return srwlib.SRWLOptC(el, pp)
+
+# set-up functions.
+set_up_funcs = [set_optics]

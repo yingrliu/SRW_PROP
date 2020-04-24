@@ -28,7 +28,7 @@ propagation_params = [
     ['op_SSA_KBAperture_pp', 'f', [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'SSA_KBAperture'],
     ['op_KBAperture_pp', 'f',     [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBAperture'],
     ['op_KBh_pp', 'f',            [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBh'],
-    ['op_KBh_KBv_pp', 'f',        [0, 0, 1.0, 1, 0, 2.0, 1.0, 2.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBh_KBv'],
+    ['op_KBh_KBv_pp', 'f',        [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBh_KBv'],
     ['op_KBv_pp', 'f',            [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBv'],
     ['op_KBv_Sample_pp', 'f',     [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBv_Sample'],
     ['op_fin_pp', 'f',            [0, 0, 1.0, 0, 1, 0.07, 1.5, 0.07, 6.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'final post-propagation (resize) parameters'],
@@ -338,7 +338,7 @@ physics_params = [
     ['op_KBv_Sample_L', 'f', 0.411, 'length'],
 ]
 
-def set_optics(names, v=None):
+def set_optics(v=None):
     el = []
     pp = []
     for el_name in names:
@@ -519,3 +519,5 @@ def set_optics(names, v=None):
     pp.append(v.op_fin_pp)
     return srwlib.SRWLOptC(el, pp)
 
+# set-up functions.
+set_up_funcs = [set_optics]
