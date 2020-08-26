@@ -28,5 +28,9 @@ the initial values, the output image is blank.
 - Should we tune the alpha parameters of the reward for different expriments?
 
 Questions:
-- In `HXN`, `SRX' file, there are several generated `.dat` files, should we consider all of them? Some 
+- In `HXN`, `SRX` file, there are several generated `.dat` files, should we consider all of them? Some 
 files lose the dimension information.
+
+## #20200510
+Changes:
+- When computing the complexity, only concerns the tuned parameter lists.
