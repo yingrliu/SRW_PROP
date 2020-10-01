@@ -1,9 +1,16 @@
-from optimizers.utils_optim import *
-from configurations.smi_sample import *
+from optimizers.utils_optim import Coordinate_Ascent
+from configurations.fmx_sample_2 import *
+
+# TODO: test multiple intensities (with weights).
+# TODO: test Newton.
 
 if __name__ == "__main__":
     # todo:
     # index_list = input()~~
-    coordinate_ascent(names, setting_params, physics_params, propagation_params, index_list, set_up_funcs,
-                min_range=0.75, max_range=5.0, min_resolution=1, max_resolution=10, step_size=0.25,
-                img_path='cache', saveto='results/srx.json')
+    tunable_params = {}
+    for item in index_list:
+        tunable_params[item] = [0.75, 5.0] if item[-1] in [5, 7] else [1., 10.]
+    Optimizer = Coordinate_Ascent(names, setting_params, physics_params, propagation_params, tunable_params, set_up_funcs,
+                                  step_size=0.1)
+    Optimizer.forward(saveto='./results/test.json')
+    print()

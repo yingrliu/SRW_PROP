@@ -79,6 +79,7 @@ def save_params(physics_params, propagation_params, tuned_list, saveto):
     params = {}
     params['physics_params'] = physics_params
     params['propagation_params'] = propagation_params
+    # TODO:
     # params['tuned_list'] = tuned_list
     with open(saveto, 'w') as outfile:
         json.dump(params, outfile)

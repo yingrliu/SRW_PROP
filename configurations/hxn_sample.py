@@ -7,6 +7,7 @@ import srwl_uti_smp
 names = ['S1', 'S1_HCM', 'HCM', 'HCM_DCM_C1', 'DCM_C1', 'DCM_C2', 'DCM_C2_HFM', 'HFM', 'After_HFM', 'After_HFM_CRL1',
          'CRL1', 'CRL2', 'CRL2_Before_SSA', 'Before_SSA', 'SSA', 'SSA_Before_FFO', 'Before_FFO', 'AFFO', 'FFO',
          'FFO_At_Sample', 'At_Sample']
+#
 
 setting_params = [
     ['name', 's', 'NSLS-II HXN beamline', 'simulation name'],
@@ -196,9 +197,9 @@ physics_params = [
     ['si_type', 'i', 0, 'type of a characteristic to be extracted after calculation of intensity distribution: 0- Single-Electron Intensity, 1- Multi-Electron Intensity, 2- Single-Electron Flux, 3- Multi-Electron Flux, 4- Single-Electron Radiation Phase, 5- Re(E): Real part of Single-Electron Electric Field, 6- Im(E): Imaginary part of Single-Electron Electric Field, 7- Single-Electron Intensity, integrated over Time or Photon Energy'],
     ['w_mag', 'i', 2, 'magnetic field to be used for calculation of intensity distribution vs horizontal and vertical position: 1- approximate, 2- accurate'],
 
-    ['si_fn', 's', 'cache/res_int_se.dat', 'file name for saving calculated single-e intensity distribution (without wavefront propagation through a beamline) vs horizontal and vertical position'],
+    ['si_fn', 's', 'res_int_se.dat', 'file name for saving calculated single-e intensity distribution (without wavefront propagation through a beamline) vs horizontal and vertical position'],
     ['si_pl', 's', '', 'plot the input intensity distributions in graph(s): ""- dont plot, "x"- vs horizontal position, "y"- vs vertical position, "xy"- vs horizontal and vertical position'],
-    ['ws_fni', 's', 'cache/res_int_pr_se.dat', 'file name for saving propagated single-e intensity distribution vs horizontal and vertical position'],
+    ['ws_fni', 's', 'res_int_pr_se.dat', 'file name for saving propagated single-e intensity distribution vs horizontal and vertical position'],
     ['ws_pl', 's', '', 'plot the resulting intensity distributions in graph(s): ""- dont plot, "x"- vs horizontal position, "y"- vs vertical position, "xy"- vs horizontal and vertical position'],
 
     ['wm_nm', 'i', 100000, 'number of macro-electrons (coherent wavefronts) for calculation of multi-electron wavefront propagation'],

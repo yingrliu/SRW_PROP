@@ -21,8 +21,8 @@ def get_state(params):
 #                        Reward Evaluation Tools                            #
 #############################################################################
 # compute the total reward of current step.
-def get_total_rewards(array_new, array_old, mesh_new, mesh_old, prv_quality, params_new, params_list,
-                      alpha_cpl=1.0, alpha_ratio=1e-2, step_size=1.0):
+def get_total_rewards(array_new, array_old, mesh_new, mesh_old, prv_quality, params_new,
+                      alpha_cpl=1e-2, alpha_ratio=1e-2, step_size=1.0):
     """
 
     :param array_new:
@@ -33,8 +33,8 @@ def get_total_rewards(array_new, array_old, mesh_new, mesh_old, prv_quality, par
     :param params_new:
     :return:
     """
-    complexity = get_complexity(prop_params=params_new, alpha=alpha_cpl, params_list=params_list)
-    quality = get_difference(array_new, array_old, mesh_new, mesh_old, alpha_ratio=alpha_ratio) * step_size + prv_quality
+    complexity = get_complexity(prop_params=params_new, alpha=alpha_cpl)
+    quality = get_difference(array_new, array_old, mesh_new, mesh_old, alpha_ratio=alpha_ratio) + prv_quality
     return quality / complexity, quality
 
 #
@@ -42,7 +42,7 @@ def get_difference(array_new, array_old, mesh_new, mesh_old, alpha_ratio):
     # interpolation array1, so its size is same as array2. 
     shape_new = array_new.shape
     shape_old = array_old.shape
-    normal_term = array_new.max() + 1e-2
+    normal_term = array_new.mean() + 1e-2
     array_new, array_old = array_new / normal_term, array_old / normal_term
     # Find the mesh of each array.
     meshx_new = np.linspace(mesh_new[0][0], mesh_new[0][1], shape_new[1])
@@ -59,7 +59,7 @@ def get_difference(array_new, array_old, mesh_new, mesh_old, alpha_ratio):
     return np.sqrt(((array_new - array_old) ** 2).mean())
 
 # compute the penalty for runtime.
-def get_complexity(prop_params, alpha=0.01, exponential=True, params_list=[]):
+def get_complexity(prop_params, alpha=0.01, exponential=True):
     """
     :param: exponential: [bool] whether use exponential function to penalize more on large complexity.
     """
