@@ -1,9 +1,6 @@
 from optimizers.utils_optim import Coordinate_Ascent
 from configurations.fmx_sample_2 import *
 
-# TODO: test multiple intensities (with weights).
-# TODO: test Newton.
-
 if __name__ == "__main__":
     # todo:
     # index_list = input()~~

@@ -15,22 +15,41 @@ copying the `SRW.pth` into the site-packages folder of your Python
 and change the path as `PATH_TO_SRW\env\work\srw_python` in `SRW.pth` to the path of the SRW package after
 the git.
 
-## #20200405
-- Two-reward paradigm works fine on `CHX`, `ESM` and `FMX` beamlines.
-- Two-reward paradigm is unable to run on `CSX` beamline. The reason is  for 
-the initial values, the output image is blank. 
+## Optimizers
+### 1. Coordinate Ascent
+#### 1.1. Descriptions
+The **coordinate Ascent** is the simplest global search method to discover the optimal
+propagation parameters by gradually increasing the values in the tunable parameter
+list with a fix step-size. The interface is defined as 
+```python
+Coordinate_Ascent(names, setting_params, physics_params, prop_params, 
+                  tunable_params, set_up_funcs)
+```
+where the parameters are given as
 
-## #20200420
-- Use an unified loss function for all parameters.
-- Coordinate Ascent method works on `FMX`, `FMX-2`, `ESM`, `CHX`, `HXN`, `SMI`.
-- Dont't work on `CSX` because the image is all zero if the parameters are not appropriate.
-- Have less satisfied result on `SRX`.
-- Should we tune the alpha parameters of the reward for different expriments?
+- names: the sequence of optics instrument names.
+- setting_params: some global setting parameters.
+- physics_params: the physics parameters of optics instruments.
+- prop_params: the propagation parameters of optics instruments.
+- tunable_params: the positions and ranges of tunable **propagation parameters**.
+- set_up_funcs: the set-up function required (and also different) for each beamline.
 
-Questions:
-- In `HXN`, `SRX` file, there are several generated `.dat` files, should we consider all of them? Some 
-files lose the dimension information.
+A example of usage is given as 
+```python
+from optimizers.utils_optim import Coordinate_Ascent
+from configurations.fmx_sample_2 import *
 
-## #20200510
-Changes:
-- When computing the complexity, only concerns the tuned parameter lists.
+if __name__ == "__main__":
+    tunable_params = {}
+    for item in index_list:
+        tunable_params[item] = [0.75, 5.0] if item[-1] in [5, 7] else [1., 10.]
+    Optimizer = Coordinate_Ascent(names, setting_params, physics_params, propagation_params, tunable_params, set_up_funcs,
+                                  step_size=0.1)
+    Optimizer.forward(saveto='./results/test.json')
+    print()
+```
+#### 1.2. Update Notes
+[`Notes/Cordinate_Ascent.md`](Notes/Cordinate_Ascent.md)
+
+
+### 2. REINFROCE

@@ -10,7 +10,7 @@ from optimizers.utils_operation import *
 # coordinate ascent optimization.
 class _optimizer():
     def __init__(self, names, setting_params, physics_params, prop_params, tunable_params, set_up_funcs,
-                 saveto=None, *args, **kwargs):
+                 *args, **kwargs):
         """
 
         :param names: list of strings that indicates each instruments.
@@ -135,9 +135,30 @@ class Coordinate_Ascent(_optimizer):
         return tuned_params
 
 
-class NewTon(_optimizer):
-    pass
+
+class Reinforce(_optimizer):
+    def __init__(self, names, setting_params, physics_params, prop_params, tunable_params, set_up_funcs,
+                 step_size=0.20):
+        super(Reinforce, self).__init__(names, setting_params, physics_params, prop_params, tunable_params, set_up_funcs)
+        #
+        self.MultiModelNet = None
+        return
+
+    def train(self):
+        """
+        the process the train the neural network by REINFORCE
+        :return:
+        """
+        return
+
+    def forward(self):
+        """
+        used the trained neural network to optimize the propagation parameters.
+        :return:
+        """
+        return
 
 
-class QLearner(_optimizer):
+
+class ActorCrtics(_optimizer):
     pass
