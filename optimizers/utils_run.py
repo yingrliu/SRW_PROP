@@ -91,3 +91,40 @@ def load_params(json_file):
     physics_params = params['physics_params']
     propagation_params = params['propagation_params']
     return physics_params, propagation_params
+
+# # mapping from number of parameters to instrument type.
+# _type_dict={
+#     ('_shape', '_Dx', '_Dy', '_x', '_y'): 'Aperture',
+#     ('_L'): 'Drift',
+#     ('_hfn', '_dim', '_r', '_size_tang', '_size_tag', '_ang', '_nvx', '_nvy', '_nvz', '_tvx', '_tvy', '_amp_coef', '_x',
+#      '_y'): 'Circular_Cylinder',
+#     ('_hfn', '_dim', '_p', '_q', '_ang', '_anp_coef', '_size_tang', '_size_tag', '_nvx', '_nvy', '_nvz', '_tvx', '_tvy',
+#      '_x', '_y'): 'Elliptical_Cylinder',
+#     (): 'Watchpoint',
+#     10: 'CRL',
+#     4: 'Lens',
+#     6: 'Planar',
+#     ('_size_tang', '_size_tag', '_nvx', '_nvy', '_nvz', '_tvx', '_tvy', '_x', '_y', '_m', '_grDen', '_grDen1',
+#      '_grDen2', '_grDen3', '_grDen4'): 'Grating'
+# }
+
+# def extract_physics_params_type(physics_params, optic_list, ):
+#     """
+#     extract physics parameters for each instrument and figure its type. (e.g aperture...)
+#     :param type_dict:
+#     :param physics_params:
+#     :return:
+#     """
+#     params_per_item = []
+#     item_idx, item_params = len(optic_list) - 1, []
+#     for content in physics_params[::-1]:
+#         if item_idx >= 0 and optic_list[item_idx][0:-3] in content[0]:
+#             item_params.insert(0, content)
+#         elif item_idx < 0:
+#             break
+#         else:
+#             params_per_item.insert(0, item_params)
+#             item_idx -= 1
+#             item_params = [content]
+#     types = [_type_dict[len(param)] for param in params_per_item]
+#     return

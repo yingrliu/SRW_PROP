@@ -7,6 +7,7 @@ of SRW simulator.
 ### Prerequisites
 - SRW: `git clone https://github.com/ochubar/SRW.git`
 - Skimage:
+- Pytorch == 1.4.0:
 
 ### Add `SRW` as Python Package
 Before testing the propagation parameter optimization, you should 
@@ -53,3 +54,7 @@ if __name__ == "__main__":
 
 
 ### 2. REINFROCE
+#### 2.1. Descriptions
+
+#### 2.2. Update Notes
+[`Notes/REINFORCE.md`](Notes/REINFORCE.md)

@@ -1,5 +1,5 @@
 from optimizers.utils_optim import Coordinate_Ascent
-from configurations.fmx_sample_2 import *
+from configurations.srx_sample import *
 
 if __name__ == "__main__":
     # todo:

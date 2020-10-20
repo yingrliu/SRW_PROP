@@ -5,7 +5,7 @@ import srwlpy
 import srwl_uti_smp
 
 names = ['Aperture', 'Aperture_HFM', 'HFM', 'Watchpoint', 'Watchpoint_Watchpoint2', 'Watchpoint2', 'SSA', 'SSA_Watchpoint3', 'Watchpoint3', 'KB_Aperture', 'KB_Aperture_KBh', 'KBh', 'KBh_Sample', 'Sample']
-       
+
 setting_params = [
      ['name', 's', 'NSLS-II FMX beamline 2-copy', 'simulation name'],
 #---Data Folder

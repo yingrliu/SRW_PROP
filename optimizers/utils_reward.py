@@ -34,8 +34,9 @@ def get_total_rewards(array_new, array_old, mesh_new, mesh_old, prv_quality, par
     :return:
     """
     complexity = get_complexity(prop_params=params_new, alpha=alpha_cpl)
-    quality = get_difference(array_new, array_old, mesh_new, mesh_old, alpha_ratio=alpha_ratio) + prv_quality
-    return quality / complexity, quality
+    difference = get_difference(array_new, array_old, mesh_new, mesh_old, alpha_ratio=alpha_ratio)
+    quality = difference + prv_quality
+    return quality / complexity, quality, difference, complexity
 
 #
 def get_difference(array_new, array_old, mesh_new, mesh_old, alpha_ratio):

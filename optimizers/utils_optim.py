@@ -2,9 +2,14 @@
 # Institute: Stony Brook University
 # auxiliary functions to optimize the propagation parameters.
 import copy
+import random
+import torch
+import torch.optim as optim
+import torch.nn.functional as F
 from optimizers.utils_reward import *
 from optimizers.utils_run import *
 from optimizers.utils_operation import *
+from optimizers.NN_package.Modules import OpticNet, OpticNet_DDPG, GaussianNLL
 
 
 # coordinate ascent optimization.
@@ -34,6 +39,8 @@ class _optimizer():
         self.reset_prop_params()
         # save the parameters to run the experiments.
         self.cache_path, self.set_up_func = self.setting_params[1][2], set_up_funcs
+        if self.cache_path and not os.path.exists(self.cache_path):
+            os.makedirs(self.cache_path)
         run_experiment(names, setting_params, physics_params, prop_params, set_up_funcs)
         # img_list = glob.glob(os.path.join(img_path, "*.dat"))                  # read the saved experiment results.
         # img_list.remove(os.path.join(img_path, "res_int_se.dat"))
@@ -78,6 +85,15 @@ class _optimizer():
                               for mesh_old, mesh, prev, current in zip(self.prv_mesh, self.mesh, self.prv_arrays, self.arrays)])
         return rewards
 
+    def _initiation(self):
+        # Initiate the optimization process.
+        self.reset_prop_params()
+        self._operate_experiments(plot=False)
+        self.prv_mesh = copy.deepcopy(self.mesh)
+        self.prv_arrays = [np.zeros_like(array) for array in self.arrays]
+        self.prv_arrays, self.prv_quality = copy.deepcopy(self.arrays), self._get_reward()[:, 1]
+        return
+
 
 
 class Coordinate_Ascent(_optimizer):
@@ -90,13 +106,8 @@ class Coordinate_Ascent(_optimizer):
     def forward(self, saveto=None):
         tuned_params = {}
         # Initiate the optimization process.
-        self.reset_prop_params()
-        self._operate_experiments(plot=False)
-        self.prv_mesh = copy.deepcopy(self.mesh)
-        self.prv_arrays = [np.zeros_like(array) for array in self.arrays]
-        rewards = self._get_reward()
-        global_best_reward = rewards[:, 0].mean()
-        self.prv_arrays, self.prv_quality = copy.deepcopy(self.arrays), rewards[:, 1]
+        self._initiation()
+        global_best_reward = self._get_reward()[:, 0].mean()
         # Optimization process.
         print("------------> Tuning parameters.")
         updates = len(self.tunable_params_positions)
@@ -138,17 +149,82 @@ class Coordinate_Ascent(_optimizer):
 
 class Reinforce(_optimizer):
     def __init__(self, names, setting_params, physics_params, prop_params, tunable_params, set_up_funcs,
-                 step_size=0.20):
+                 OpticNetConfig, device='cpu', checkpoints=None):
+        """
+
+        :param names:
+        :param setting_params:
+        :param physics_params:
+        :param prop_params:
+        :param tunable_params:
+        :param set_up_funcs:
+        :param OpticNetConfig: dictionary that contains all the parameters required for the OpticNet
+        :param device:
+        """
         super(Reinforce, self).__init__(names, setting_params, physics_params, prop_params, tunable_params, set_up_funcs)
-        #
-        self.MultiModelNet = None
+        self.NeuralNet = OpticNet(**OpticNetConfig).to(device=torch.device(device))
+        self.OpticNetConfig = OpticNetConfig
+        # load the trained model.
+        if checkpoints:
+            #todo:
+            pass
         return
 
-    def train(self):
+    def train(self, numTrajs, numSteps, BeamLine_List, numEpisode=1000, std=1e-1, gamma=0.5, lr=1e-2):
         """
         the process the train the neural network by REINFORCE
+        :param numTrajs: number of propagation parameter trajectories used for training.
+        :param numSteps: number of steps of each episode (the number of point of the trajectory)
+        :param BeamLine_List [List(str)]: the list of beamlines used for training (each string represents a import statement to import configuration).
         :return:
         """
+        # Access all the training beamlines as _optimizers.
+        def get_beamline(beam):
+            exec("from {} import *".format(beam), globals())
+            # get tunable_params
+            tunable_params = {}
+            for item in index_list:
+                tunable_params[item] = [0.75, 5.0] if item[-1] in [5, 7] else [1., 10.]
+            return _optimizer(names, setting_params, physics_params, propagation_params, tunable_params, set_up_funcs)
+        BeamLine_Optimizers = [get_beamline(beam) for beam in BeamLine_List]
+        # Run the trials.
+        optimizer = optim.Adam(self.NeuralNet.parameters(), lr=lr)
+        for episode in range(numEpisode):
+            random.shuffle(BeamLine_Optimizers)
+            rewards_all, NLL_all = [], []
+            for beamline in BeamLine_Optimizers:
+                beamline._initiation()
+                reward_per_step, NLL_per_step, deltas_props, complexity = [], [], [], 1.
+                # run the simulation and collect records.
+                for step in range(numSteps):
+                    types, arrays, props, masks = self._get_tensor_batch(beamline=beamline)
+                    arrays =(arrays - arrays.mean()) / (arrays.std() + 1e-4)
+                    Props_new, delta_Prop = self.NeuralNet.forward(types, props, arrays)
+                    noise = std * torch.randn_like(delta_Prop).to(next(self.NeuralNet.parameters()).device)   # add noise the the paths.
+                    noisy_delta_Prop = (delta_Prop + noise).detach()
+                    noisy_Props_new = (Props_new + noise).detach()
+                    # update params and get new experiment results.
+                    clamp_Props_new = self._update_prop_from_tensor(noisy_Props_new, beamline)
+                    beamline._operate_experiments(plot=False)
+                    reward = beamline._get_reward()
+                    reward_per_step.append(reward[:, 2].mean())
+                    nll = (GaussianNLL(noisy_delta_Prop, delta_Prop.squeeze(), std).squeeze() * masks).sum() / masks.sum()
+                    # save the records.
+                    deltas_props.append(clamp_Props_new)
+                    NLL_per_step.append(nll)
+                    complexity = reward[:, 3].mean()
+                # compute and optimize the neural network.
+                V_values, V = [0.], 0.
+                for reward in reward_per_step[::-1]:
+                    V = reward + gamma * V / complexity
+                    V_values.insert(0, V)
+                V_values = np.asarray(V_values)
+                V_values = (V_values - V_values.mean()) / (V_values.std() + 1e-4)
+                optimizer.zero_grad()
+                losses = torch.cat([(nll * v).unsqueeze(0) for nll, v in zip(NLL_per_step, V_values)]).sum()
+                losses.backward()
+                optimizer.step()
+                print('\x1b[1;35m{}\x1b[0m'.format(float(losses.detach().cpu().numpy())))
         return
 
     def forward(self):
@@ -158,7 +234,98 @@ class Reinforce(_optimizer):
         """
         return
 
+    def _get_tensor_batch(self, beamline=None):
+        """
+        transform the information we can get from SRW into tensor format (which will be used as the input of the neural network)
+        :param beamline: [_optimizer] a optimizer for a specific beamline. If is None, use self's own members.
+        :return:
+        """
+        # Process intensity distribution.
+        def process_intensities(array):
+            height, weight = array.shape
+            torch_array = torch.Tensor(array).to(next(self.NeuralNet.parameters()).device).view(1, 1, height, weight)
+            torch_array = F.interpolate(torch_array, (self.OpticNetConfig["dimArray"], self.OpticNetConfig["dimArray"]))
+            return torch_array
+        # Decide which beamline to use.
+        arrays = self.arrays if beamline is None else beamline.arrays
+        prop_params = self.prop_params if beamline is None else beamline.prop_params
+        physics_params = self.physics_params if beamline is None else beamline.physics_params
+        # Transform
+        arrays = torch.cat([process_intensities(array) for array in arrays], dim=0)
+        props = torch.Tensor([item[2][5:9] for item in prop_params]).to(next(self.NeuralNet.parameters()).device)
+        props = props.unsqueeze(1)
+        # Mask.
+        masks = torch.zeros(size=(len(prop_params), 4)).to(next(self.NeuralNet.parameters()).device)
+        for pos in self.tunable_params_positions:
+            masks[pos[0], pos[1] - 5] = 1.0
+        # # Extract physics parameters for each item and decide its type.
+        # extract_physics_params_type(physics_params, [item[0] for item in prop_params])
+        types = ['Aperture'] * len(prop_params)
+        return types, arrays, props, masks
+
+    def _update_prop_from_tensor(self, prop_tensor, beamline=None):
+        """
+        use the output of neural network to update the parameters in the optimizer (simulator). This function also
+        return a new prop_tensor whose values are clamped by the provided ranges.
+        :param prop_tensor:
+        :param beamline:
+        :return:
+        """
+        props_new = prop_tensor.squeeze().detach().cpu().numpy()
+        prop_params = self.prop_params if beamline is None else beamline.prop_params
+        tunable_params_positions = self.tunable_params_positions if beamline is None else beamline.tunable_params_positions
+        tunable_params_ranges = self.tunable_params_ranges if beamline is None else beamline.tunable_params_ranges
+        for pos, interval in zip(tunable_params_positions, tunable_params_ranges):
+            # update the mesh, mesh_old, array, array_old and get rewards.
+            new_value = np.clip(props_new[pos[0], pos[1] - 5], interval[0], interval[1])
+            updata_param(prop_params, pos, new_value)
+            props_new[pos[0], pos[1] - 5] = new_value
+        return torch.Tensor(props_new).to(next(self.NeuralNet.parameters()).device)
 
 
-class ActorCrtics(_optimizer):
-    pass
+# Deep Deterministic Policy Gradient.
+class DDPG(_optimizer):
+    def __init__(self, names, setting_params, physics_params, prop_params, tunable_params, set_up_funcs,
+                 OpticNetConfig, device='cpu', checkpoints=None):
+        """
+
+        :param names:
+        :param setting_params:
+        :param physics_params:
+        :param prop_params:
+        :param tunable_params:
+        :param set_up_funcs:
+        :param OpticNetConfig: dictionary that contains all the parameters required for the OpticNet
+        :param device:
+        """
+        super(DDPG, self).__init__(names, setting_params, physics_params, prop_params, tunable_params,
+                                        set_up_funcs)
+        self.NeuralNet = OpticNet_DDPG(**OpticNetConfig).to(device=torch.device(device))
+        self.OpticNetConfig = OpticNetConfig
+        # load the trained model.
+        if checkpoints:
+            pass
+        return
+
+    def train(self, numTrajs, numSteps, BeamLine_List, numEpisode=1000, std=1e-1, gamma=0.5, lr=1e-2):
+        """
+        the process the train the neural network by REINFORCE
+        :param numTrajs: number of propagation parameter trajectories used for training.
+        :param numSteps: number of steps of each episode (the number of point of the trajectory)
+        :param BeamLine_List [List(str)]: the list of beamlines used for training (each string represents a import statement to import configuration).
+        :return:
+        """
+        # Access all the training beamlines as _optimizers.
+        def get_beamline(beam):
+            exec("from {} import *".format(beam), globals())
+            # get tunable_params
+            tunable_params = {}
+            for item in index_list:
+                tunable_params[item] = [0.75, 5.0] if item[-1] in [5, 7] else [1., 10.]
+            return _optimizer(names, setting_params, physics_params, propagation_params, tunable_params, set_up_funcs)
+        BeamLine_Optimizers = [get_beamline(beam) for beam in BeamLine_List]
+        # Run the trials.
+        actor_optimizer = optim.Adam(self.NeuralNet.actor_params, lr=lr)
+        critic_optimizer = optim.Adam(self.NeuralNet.critic_params, lr=lr)
+        # todo:
+        return
