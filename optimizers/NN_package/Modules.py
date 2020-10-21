@@ -196,6 +196,7 @@ class OpticNet(nn.Module):
         return
 
     def forward(self, Names, Props, Arrays):
+        Arrays = (Arrays - Arrays.mean()) / (Arrays.std() + 1e-4)
         Array_features = self.IntensityCNN(Arrays).mean(0, keepdim=True)
         Names_features = self.TextRnn(Names)[0]
         Props_features = self.PropRNN(Props)[0]
@@ -300,12 +301,3 @@ class OpticNet_DDPG(OpticNet):
             return Props + delta_Prop, delta_Prop, delta_Prop_target, critic, critic_target
         else:
             return Props + delta_Prop, delta_Prop
-
-
-class ReplayBuffer(object):
-    """
-    A replay buffer that used to save the historical steps of the experiments, used for deep reinforcement learning
-    when we use deep neural network to approximate the Q value.
-    """
-    def __init__(self):
-        return
