@@ -15,7 +15,7 @@ setting_params = [
     ['fdir', 's', 'cache', 'folder (directory) name for reading-in input and saving output data files']
 ]
 
-index_list = [(0, 5), (0, 6), (0, 7), (0, 8), (11, 5), (11, 6), (11, 7), (11, 8)]
+index_list = [(0, 5), (0, 6), (0, 7), (0, 8)]
 
 
 propagation_params = [

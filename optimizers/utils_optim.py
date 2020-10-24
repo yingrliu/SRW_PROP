@@ -85,9 +85,9 @@ class _optimizer():
                               for mesh_old, mesh, prev, current in zip(self.prv_mesh, self.mesh, self.prv_arrays, self.arrays)])
         return rewards
 
-    def _initiation(self):
+    def _initiation(self, init_values=None):
         # Initiate the optimization process.
-        self.reset_prop_params()
+        self.reset_prop_params(init_values)
         self._operate_experiments(plot=False)
         self.prv_mesh = copy.deepcopy(self.mesh)
         self.prv_arrays, self.prv_quality = [np.zeros_like(array) for array in self.arrays], 0.
@@ -96,9 +96,9 @@ class _optimizer():
 
 
 
-class Coordinate_Ascent(_optimizer):
+class OptimCoordinateAscent(_optimizer):
     def __init__(self, names, setting_params, physics_params, prop_params, tunable_params, set_up_funcs, step_size=0.20):
-        super(Coordinate_Ascent, self).__init__(names, setting_params, physics_params, prop_params, tunable_params,
+        super(OptimCoordinateAscent, self).__init__(names, setting_params, physics_params, prop_params, tunable_params,
                                                 set_up_funcs)
         self.step_size = step_size
         return
@@ -147,7 +147,7 @@ class Coordinate_Ascent(_optimizer):
 
 
 
-class Reinforce(_optimizer):
+class OptimReinforce(_optimizer):
     def __init__(self, names, setting_params, physics_params, prop_params, tunable_params, set_up_funcs,
                  OpticNetConfig, device='cpu', checkpoint=None):
         """
@@ -161,7 +161,7 @@ class Reinforce(_optimizer):
         :param OpticNetConfig: dictionary that contains all the parameters required for the OpticNet
         :param device:
         """
-        super(Reinforce, self).__init__(names, setting_params, physics_params, prop_params, tunable_params, set_up_funcs)
+        super(OptimReinforce, self).__init__(names, setting_params, physics_params, prop_params, tunable_params, set_up_funcs)
         self.NeuralNet = OpticNet(**OpticNetConfig).to(device=torch.device(device))
         self.OpticNetConfig = OpticNetConfig
         # load the trained model.
@@ -183,7 +183,7 @@ class Reinforce(_optimizer):
             # get tunable_params
             tunable_params = {}
             for item in index_list:
-                tunable_params[item] = [0.75, 3.0] if item[-1] in [5, 7] else [1., 5.]
+                tunable_params[item] = [0.75, 5.0] if item[-1] in [5, 7] else [1., 5.]
             return _optimizer(names, setting_params, physics_params, propagation_params, tunable_params, set_up_funcs)
         BeamLine_Optimizers = [get_beamline(beam) for beam in BeamLine_List]
         # Run the trials.
@@ -212,19 +212,20 @@ class Reinforce(_optimizer):
                     Prop_param_per_sample.append(clamp_Props_new)
                 # compute and optimize the neural network.
                 V_values = np.asarray(reward_per_sample)
-                # V_values = (V_values - V_values.mean()) / (V_values.std() + 1e-4)
+                V_values = (V_values - V_values.mean()) / (V_values.std() + 1e-4)
                 optimizer.zero_grad()
                 losses = torch.cat([(nll * v).unsqueeze(0) for nll, v in zip(NLL_per_sample, V_values)]).mean()
                 losses.backward()
                 optimizer.step()
                 avg_loss += losses.detach().cpu().numpy()
-                print('\x1b[1;35m{}\x1b[0m'.format(float(losses.detach().cpu().numpy())))
+                print('\x1b[1;35mLoss: {}\x1b[0m'.format(float(losses.detach().cpu().numpy())))
             avg_loss /= len(BeamLine_Optimizers)
             if avg_loss < best_losses:
                 best_losses = avg_loss
                 if saveto:
                     if not os.path.exists(saveto):
                         os.makedirs(saveto)
+                    print('\x1b[1;35mSaved Model.\x1b[0m')
                     torch.save(self.NeuralNet.state_dict(), os.path.join(saveto, 'model_params.pth'))
         return
 
@@ -233,12 +234,11 @@ class Reinforce(_optimizer):
         used the trained neural network to optimize the propagation parameters.
         :return:
         """
-        # todo:
         self._initiation()
         types, arrays, props, masks = self._get_tensor_batch()
         Props_new = self.NeuralNet.forward(types, props, arrays)[0]
         # update params and get new experiment results.
-        clamp_Props_new = self._update_prop_from_tensor(Props_new)
+        self._update_prop_from_tensor(Props_new)
         self._operate_experiments(plot=True)
         tuned_params = {}
         for position in self.tunable_params_positions:
@@ -297,7 +297,7 @@ class Reinforce(_optimizer):
 
 
 # Deep Deterministic Policy Gradient.
-class DDPG(_optimizer):
+class OptimDDPG(OptimReinforce):
     def __init__(self, names, setting_params, physics_params, prop_params, tunable_params, set_up_funcs,
                  BufferConfig, OpticNetConfig, device='cpu', checkpoint=None):
         """
@@ -311,17 +311,16 @@ class DDPG(_optimizer):
         :param OpticNetConfig: dictionary that contains all the parameters required for the OpticNet
         :param device:
         """
-        super(DDPG, self).__init__(names, setting_params, physics_params, prop_params, tunable_params,
-                                        set_up_funcs)
+        super(OptimDDPG, self).__init__(names, setting_params, physics_params, prop_params, tunable_params,
+                                        set_up_funcs, OpticNetConfig, device)
         self.NeuralNet = OpticNet_DDPG(**OpticNetConfig).to(device=torch.device(device))
-        self.OpticNetConfig = OpticNetConfig
         # load the trained model.
         if checkpoint:
             print("\x1b[1;35mLoad trained model.\x1b[0m")
             self.NeuralNet.load_state_dict(torch.load(checkpoint))
         return
 
-    def train(self, numSamples, BeamLine_List, numEpisode=1000, lr=1e-2, saveto=None):
+    def train(self, numSamples, BeamLine_List, numEpisode=100, std=1.0, lr=1e-2, alpha=0.8, saveto=None):
         """
         the process the train the neural network by REINFORCE
         :param numSamples: number of propagation parameter samples used for training.
@@ -341,18 +340,64 @@ class DDPG(_optimizer):
             # get tunable_params
             tunable_params = {}
             for item in index_list:
-                tunable_params[item] = [0.75, 5.0] if item[-1] in [5, 7] else [1., 10.]
+                tunable_params[item] = [0.75, 5.] if item[-1] in [5, 7] else [1., 5.]
             return _optimizer(names, setting_params, physics_params, propagation_params, tunable_params, set_up_funcs)
         BeamLine_Optimizers = [get_beamline(beam) for beam in BeamLine_List]
         # Run the trials.
         actor_optimizer = optim.Adam(self.NeuralNet.actor_params, lr=lr)
         critic_optimizer = optim.Adam(self.NeuralNet.critic_params, lr=lr)
         # Start training.
-        for Epi in range(numEpisode):
-            for episode in range(numEpisode):
-                random.shuffle(BeamLine_Optimizers)
-                for beamline in BeamLine_Optimizers:
-                    beamline._initiation()
-                    reward_per_step, deltas_props, complexity = [], [], 1.
+        best_losses = float('inf')
+        for episode in range(numEpisode):
+            random.shuffle(BeamLine_Optimizers)
+            avg_loss = 0.
+            for beamline in BeamLine_Optimizers:
+                beamline._initiation()
+                # Collect records to train the critic network.
+                rewards, deltas_props, critics = [], [], []
+                for step in range(numSamples):
                     # todo:
+                    beamline._initiation()
+                    types, arrays, props, masks = self._get_tensor_batch(beamline=beamline)
+                    Props_new, delta_Prop = self.NeuralNet.forward(types, props, arrays)
+                    noise = std * torch.randn_like(delta_Prop).to(
+                        next(self.NeuralNet.parameters()).device)  # add noise the the paths.
+                    noisy_Props_new = (Props_new + noise).detach()
+                    # update params and get new experiment results.
+                    clamp_Props_new = self._update_prop_from_tensor(noisy_Props_new, beamline)
+                    beamline._operate_experiments(plot=False)
+                    reward = beamline._get_reward()
+                    # collect training batch for critic network.
+                    rewards.append(reward[:, 0].mean())
+                    clamp_delta_prop = (clamp_Props_new.unsqueeze(1) - props).detach()
+                    deltas_props.append(clamp_delta_prop)
+                    _, _, critic = self.NeuralNet.forward(types, props, arrays, clamp_delta_prop)
+                    critics.append(critic)
+                actor_optimizer.zero_grad()
+                critic_optimizer.zero_grad()
+                rewards = np.asarray(rewards)
+                # rewards = (rewards - rewards.mean()) / (rewards.std() + 1e-4)
+                losses = sum([(reward - critic) ** 2 for reward, critic in zip(rewards, critics)]) / numSamples
+                losses.backward()
+                critic_optimizer.step()
+                print('\x1b[1;35mEpisode {} - Critic Loss: {}\x1b[0m'.format(episode, float(losses.detach().cpu().numpy())))
+                # Training the actor network with the critic network.
+                beamline._initiation()
+                types, arrays, props, masks = self._get_tensor_batch(beamline=beamline)
+                Props_new, delta_Prop = self.NeuralNet.forward(types, props, arrays)
+                _, _, critic = self.NeuralNet.forward(types, props, arrays, delta_Prop)
+                actor_optimizer.zero_grad()
+                critic_optimizer.zero_grad()
+                (-critic).backward()
+                actor_optimizer.step()
+                print('\x1b[1;35mEpisode {} - Actor Loss: {}\x1b[0m'.format(episode, float(-critic.detach().cpu().numpy())))
+                avg_loss += float(-critic.detach().cpu().numpy()) + float(losses.detach().cpu().numpy())
+            avg_loss /= len(BeamLine_Optimizers)
+            if avg_loss < best_losses:
+                best_losses = avg_loss
+                if saveto:
+                    if not os.path.exists(saveto):
+                        os.makedirs(saveto)
+                    print('\x1b[1;35mSaved Model.\x1b[0m')
+                    torch.save(self.NeuralNet.state_dict(), os.path.join(saveto, 'model_params.pth'))
         return

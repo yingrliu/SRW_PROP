@@ -43,7 +43,7 @@ def get_difference(array_new, array_old, mesh_new, mesh_old, alpha_ratio):
     # interpolation array1, so its size is same as array2. 
     shape_new = array_new.shape
     shape_old = array_old.shape
-    normal_term = array_new.mean() + 1e-2
+    normal_term = array_new.max() + 1e-2
     array_new, array_old = array_new / normal_term, array_old / normal_term
     # Find the mesh of each array.
     meshx_new = np.linspace(mesh_new[0][0], mesh_new[0][1], shape_new[1])

@@ -13,7 +13,7 @@ setting_params = [
 ]
 
 # tunable list.
-index_list = [(0, 5), (0, 6), (0, 7), (0, 8), (4, 6), (16, 5), (16, 6), (16, 7), (16, 8)]
+index_list = [(0, 5), (0, 6), (0, 7), (0, 8), (4, 6)]
 
 propagation_params = [
     #---Propagation parameters

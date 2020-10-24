@@ -14,8 +14,8 @@ setting_params = [
 ]
 
 # tunable list.
-index_list = list(reversed([(0, 5), (0, 7), (10, 6), (10, 8), (11, 5), (11, 6), (11, 7), (11, 8),
-              (12, 5), (12, 6), (12, 7), (12, 8), (13, 5), (13, 6), (13, 7), (13, 8)]))
+index_list = list(reversed([(0, 5), (0, 7), (10, 6), (10, 8), (11, 5), (11, 6), (11, 7), (11, 8), (12, 5),
+                            (12, 6), (12, 7), (12, 8)]))
 
 propagation_params = [
 #---Propagation parameters

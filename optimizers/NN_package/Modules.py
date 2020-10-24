@@ -140,6 +140,7 @@ def get_DenseNet(dimIn, dimHiddens, dimOut=None):
         Net.add_module('Tanh-{}'.format(i), nn.Tanh())
     if dimOut:
         Net.add_module('Output', nn.Linear(dims[-1], dimOut))
+        Net.add_module('Softplus', nn.Softplus())
     return Net
 
 
@@ -251,10 +252,7 @@ class OpticNet_DDPG(OpticNet):
         # extra components for DDPG.
         dimPropRNN = dimPropRNN if dimPropRNN else dimNameRNN
         dimOutput_denses = dimOutput_denses if dimOutput_denses else dimCNN_denses
-        self.OutputNet_target = get_DenseNet(dimNameRNN + dimPropRNN + dimCNN_denses[-1], dimOutput_denses, dimProp)
-        self.CriticNet = get_DenseNet(dimNameRNN + dimPropRNN * 2 + dimCNN_denses[-1], dimOutput_denses, 1)
-        self.CriticNet_target = get_DenseNet(dimNameRNN + dimPropRNN * 2 + dimCNN_denses[-1], dimOutput_denses, 1)
-        self._soft_copy()
+        self.CriticNet = get_DenseNet(dimNameRNN + dimPropRNN + dimCNN_denses[-1] + dimProp, dimOutput_denses, 1)
         # split the parameter groups.
         self.actor_params = nn.ParameterList()
         self.actor_params.extend(self.OutputNet.parameters())
@@ -264,26 +262,12 @@ class OpticNet_DDPG(OpticNet):
         self.critic_params = nn.ParameterList(self.CriticNet.parameters())
         return
 
-    def _soft_copy(self, alpha=0.):
-        # copy parameters of critic network into the target one.
-        for target_param, param in zip(self.CriticNet_target.parameters(), self.CriticNet.parameters()):
-            target_param.data.copy_(
-                target_param.data * (1.0 - alpha) + param.data * alpha
-            )
-        # copy parameters of actor network into the target one.
-        for target_param, param in zip(self.OutputNet_target.parameters(), self.OutputNet.parameters()):
-            target_param.data.copy_(
-                target_param.data * (1.0 - alpha) + param.data * alpha
-            )
-        return
-
-    def forward(self, Names, Props, Arrays, ddpg=True):
+    def forward(self, Names, Props, Arrays, delta_Prop_input=None):
         """
 
         :param Names:
         :param Props:
         :param Arrays:
-        :param ddpg: whether return the components required for DDPG training.
         :return:
         """
         Array_features = self.IntensityCNN(Arrays).mean(0, keepdim=True)
@@ -293,11 +277,9 @@ class OpticNet_DDPG(OpticNet):
                                          Names_features.repeat(1, Props.size()[1], 1),
                                          Props_features],
                                         dim=-1)
-        delta_Prop = torch.exp(self.OutputNet(MultiModal_features))
-        if ddpg:
-            delta_Prop_target = torch.exp(self.OutputNet_target(MultiModal_features)).detach()
-            critic = torch.exp(self.CriticNet(MultiModal_features))
-            critic_target = torch.exp(self.CriticNet_target(MultiModal_features)).detach()
-            return Props + delta_Prop, delta_Prop, delta_Prop_target, critic, critic_target
+        delta_Prop = self.OutputNet(MultiModal_features)
+        if delta_Prop_input is not None:
+            critic = torch.exp(self.CriticNet(torch.cat([MultiModal_features, delta_Prop_input], dim=-1))).mean()
+            return Props + delta_Prop, delta_Prop, critic
         else:
             return Props + delta_Prop, delta_Prop
