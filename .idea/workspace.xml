@@ -1,17 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/optimizers/utils_run.py" line="107" />
-    <bookmark url="file://$PROJECT_DIR$/optimizers/utils_optim.py" line="298" />
+    <bookmark url="file://$PROJECT_DIR$/SRW_PROP/optimizers/utils_run.py" line="107" />
+    <bookmark url="file://$PROJECT_DIR$/SRW_PROP/optimizers/utils_optim.py" line="446" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1533da06-b822-43e7-943f-4e7efad50c94" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/NeuralNet/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SRW_PROP/get_groud_true.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SRW_PROP/test_grid_search.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/SRW_PROP.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SRW_PROP.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cache/res_int_pr_se.dat" beforeDir="false" afterPath="$PROJECT_DIR$/cache/res_int_pr_se.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/optimizers/NN_package/Memories.py" beforeDir="false" afterPath="$PROJECT_DIR$/optimizers/NN_package/Memories.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/optimizers/NN_package/Modules.py" beforeDir="false" afterPath="$PROJECT_DIR$/optimizers/NN_package/Modules.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/optimizers/utils_optim.py" beforeDir="false" afterPath="$PROJECT_DIR$/optimizers/utils_optim.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_reinforce.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_reinforce.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Notes/Cordinate_Ascent.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Notes/REINFORCE.md" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/Notes/ParticleSwarm.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SRW.pth" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/SRW.pth" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrueValues/chx_in.png" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/chx_in.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrueValues/chx_out.png" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/chx_out.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrueValues/chx_sample.json" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/chx_sample.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrueValues/esm_in.png" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/esm_in.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrueValues/esm_out.png" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/esm_out.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrueValues/esm_sample.json" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/esm_sample.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrueValues/fmx_2_in.png" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/fmx_2_in.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrueValues/fmx_2_out.png" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/fmx_2_out.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrueValues/fmx_in.png" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/fmx_in.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrueValues/fmx_out.png" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/fmx_out.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrueValues/fmx_sample.json" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/fmx_sample.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrueValues/fmx_sample_2.json" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/fmx_sample_2.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrueValues/hxn_in.png" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/hxn_in.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrueValues/hxn_out.png" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/hxn_out.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrueValues/hxn_sample.json" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/hxn_sample.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrueValues/sim_out.png" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/sim_out.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrueValues/smi_in.png" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/smi_in.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrueValues/smi_sample.json" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/smi_sample.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrueValues/srx_in.png" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/srx_in.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrueValues/srx_out.png" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/srx_out.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TrueValues/srx_sample.json" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/srx_sample.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cache/res_int_pr_se.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cache/res_int_se.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configurations/chx_mirror_1d.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configurations/chx_sample.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configurations/csx_mirror_1d.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configurations/csx_sample.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configurations/esm_mirror_1d.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configurations/esm_sample.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configurations/fmx_sample.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configurations/fmx_sample_2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configurations/hxn_sample.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configurations/magn_meas_srx.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configurations/magn_meas_u20_hxn.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configurations/smi_HFM_Rh7.6km.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configurations/smi_Si_heat204.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configurations/smi_VDM.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configurations/smi_VFM_Rh5.4km.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configurations/smi_sample.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/configurations/srx_sample.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/magn_meas/ivu20_hxn_g10_2c.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/magn_meas/ivu20_hxn_g11_2c.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/magn_meas/ivu20_hxn_g12_2c.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/magn_meas/ivu20_hxn_g13_2c.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/magn_meas/ivu20_hxn_g14_2c.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/magn_meas/ivu20_hxn_g15_2c.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/magn_meas/ivu20_hxn_g20c.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/magn_meas/ivu20_hxn_g25c.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/magn_meas/ivu20_hxn_g5_5c.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/magn_meas/ivu20_hxn_g5_7c.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/magn_meas/ivu20_hxn_g6_2c.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/magn_meas/ivu20_hxn_g6_7c.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/magn_meas/ivu20_hxn_g7_2c.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/magn_meas/ivu20_hxn_g7_7c.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/magn_meas/ivu20_hxn_g8_2c.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/magn_meas/ivu20_hxn_g8_7c.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/magn_meas/ivu20_hxn_g9_2c.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/magn_meas/ivu20_hxn_g9_7c.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/magn_meas/ivu20_hxn_sum.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/optimizers/NN_package/Modules.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/optimizers/NN_package/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/NeuralNet/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/optimizers/NN_package/fetchdata.py" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/configurations/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/optimizers/NN_package/utils_train.py" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/unittests/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/optimizers/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/optimizers/utils_operation.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/optimizers/utils_optim.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/optimizers/utils_reward.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/optimizers/utils_run.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_grid_search.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_reinforce.py" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/test_reinforce.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unittests/OpticNet_unittest.py" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/unittests/OpticNet_unittest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unittests/Reinforce_unittest.py" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/unittests/Reinforce_unittest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unittests/cache/res_int_pr_se.dat" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/unittests/cache/res_int_pr_se.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unittests/cache/res_int_se.dat" beforeDir="false" afterPath="$PROJECT_DIR$/SRW_PROP/unittests/cache/res_int_se.dat" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -21,32 +100,22 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/SRW_PROP$NSLS_II_ESM_beamline_Intensity_Sample_104_557m.coverage" NAME="NSLS-II-ESM-beamline-Intensity-Sample-104.557m Coverage Results" MODIFIED="1603934737949" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="F:/MyFiles/Downloads" />
     <SUITE FILE_PATH="coverage/SRW_PROP$Modules.coverage" NAME="Modules Coverage Results" MODIFIED="1602119734451" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/optimizers/NN_package" />
-    <SUITE FILE_PATH="coverage/SRW_PROP$test_grid_search.coverage" NAME="test_grid_search Coverage Results" MODIFIED="1600970490031" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/SRW_PROP$OpticNet_unittest.coverage" NAME="OpticNet_unittest Coverage Results" MODIFIED="1602207617272" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/unittests" />
+    <SUITE FILE_PATH="coverage/SRW_PROP$test_grid_search.coverage" NAME="test_grid_search Coverage Results" MODIFIED="1604424149976" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/SRW_PROP" />
     <SUITE FILE_PATH="coverage/SRW_PROP$Reinforce_unittest.coverage" NAME="Reinforce_unittest Coverage Results" MODIFIED="1602276536052" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/unittests" />
-    <SUITE FILE_PATH="coverage/SRW_PROP$test_reinforce.coverage" NAME="test_reinforce Coverage Results" MODIFIED="1603309583694" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/SRW_PROP$test_reinforce.coverage" NAME="test_reinforce Coverage Results" MODIFIED="1603908448812" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/SRW_PROP$run.coverage" NAME="run Coverage Results" MODIFIED="1587673047666" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/Desktop/NSLS-II_HXN_beamline" />
+    <SUITE FILE_PATH="coverage/SRW_PROP$get_groud_true.coverage" NAME="get_groud_true Coverage Results" MODIFIED="1603935056127" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/SRW_PROP" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Modules.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/optimizers/NN_package/Modules.py">
+      <file leaf-file-name="utils_optim.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SRW_PROP/optimizers/utils_optim.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="356">
-              <caret line="188" column="30" selection-start-line="188" selection-start-column="23" selection-end-line="188" selection-end-column="30" />
-              <folding>
-                <element signature="e#116#128#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="utils_optim.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/optimizers/utils_optim.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="468">
-              <caret line="293" column="59" selection-start-line="293" selection-start-column="59" selection-end-line="293" selection-end-column="59" />
+            <state relative-caret-position="224">
+              <caret line="265" column="60" selection-start-line="264" selection-start-column="22" selection-end-line="265" selection-end-column="60" />
               <folding>
                 <element signature="e#119#130#0" expanded="true" />
               </folding>
@@ -54,59 +123,28 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/results/test.json">
+      <file leaf-file-name="test_grid_search.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SRW_PROP/test_grid_search.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="628">
-              <caret column="18839" selection-start-column="18821" selection-end-column="18839" />
+            <state relative-caret-position="19">
+              <caret line="1" column="30" selection-start-line="1" selection-start-column="30" selection-end-line="1" selection-end-column="30" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Memories.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/optimizers/NN_package/Memories.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
-              <caret line="12" column="82" selection-start-line="12" selection-start-column="82" selection-end-line="12" selection-end-column="82" />
-            </state>
-          </provider>
+      <file leaf-file-name="uti_plot-211.png" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-211.png">
+          <provider selected="true" editor-type-id="images" />
         </entry>
       </file>
       <file leaf-file-name="utils_reward.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/optimizers/utils_reward.py">
+        <entry file="file://$PROJECT_DIR$/SRW_PROP/optimizers/utils_reward.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-9">
-              <caret line="52" column="10" selection-start-line="52" selection-start-column="10" selection-end-line="52" selection-end-column="10" />
+            <state>
+              <caret column="14" selection-start-column="14" selection-end-column="14" />
               <folding>
                 <element signature="e#116#134#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="utils_run.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/optimizers/utils_run.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="297">
-              <caret line="83" selection-start-line="83" selection-end-line="83" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="test_grid_search.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test_grid_search.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="19">
-              <caret line="1" column="30" selection-start-line="1" selection-start-column="20" selection-end-line="1" selection-end-column="30" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="test_reinforce.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test_reinforce.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="359">
-              <caret line="25" selection-start-line="25" selection-end-line="25" />
             </state>
           </provider>
         </entry>
@@ -126,6 +164,12 @@
       <find>set</find>
       <find>reinforce</find>
       <find>GaussianNLL</find>
+      <find>set_</find>
+      <find>param</find>
+      <find>local_best_particle</find>
+      <find>:</find>
+      <find>get_total_rewards</find>
+      <find>mirror_1d.dat</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -136,8 +180,6 @@
       <list>
         <option value="$PROJECT_DIR$/SRW.pth" />
         <option value="F:/MyFiles/Downloads/nsls-ii-fmx-beamline-intensity-sample-67m.py" />
-        <option value="$PROJECT_DIR$/configurations/chx_sample.py" />
-        <option value="$PROJECT_DIR$/configurations/csx_sample.py" />
         <option value="$PROJECT_DIR$/configurations/esm_sample.py" />
         <option value="$PROJECT_DIR$/configurations/fmx_sample.py" />
         <option value="$PROJECT_DIR$/configurations/hxn.py" />
@@ -146,7 +188,6 @@
         <option value="$PROJECT_DIR$/utils_run.py" />
         <option value="$PROJECT_DIR$/utils_optim.py" />
         <option value="$PROJECT_DIR$/utils_reward.py" />
-        <option value="$PROJECT_DIR$/configurations/smi_sample.py" />
         <option value="$PROJECT_DIR$/optimizors/utils_optim.py" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/configurations/srx_sample.py" />
@@ -157,14 +198,27 @@
         <option value="$PROJECT_DIR$/unittests/Reinforce_unittest.py" />
         <option value="$PROJECT_DIR$/configurations/fmx_sample_2.py" />
         <option value="$PROJECT_DIR$/optimizers/utils_run.py" />
-        <option value="$PROJECT_DIR$/optimizers/utils_reward.py" />
         <option value="$PROJECT_DIR$/Notes/REINFORCE.md" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/optimizers/NN_package/Memories.py" />
+        <option value="$PROJECT_DIR$/optimizers/NN_package/fetchdata.py" />
+        <option value="$PROJECT_DIR$/optimizers/NN_package/utils_train.py" />
+        <option value="$PROJECT_DIR$/configurations/chx_sample.py" />
+        <option value="$PROJECT_DIR$/configurations/csx_sample.py" />
+        <option value="$PROJECT_DIR$/configurations/smi_sample.py" />
         <option value="$PROJECT_DIR$/optimizers/NN_package/Modules.py" />
+        <option value="$PROJECT_DIR$/optimizers/utils_reward.py" />
         <option value="$PROJECT_DIR$/test_reinforce.py" />
-        <option value="$PROJECT_DIR$/test_grid_search.py" />
         <option value="$PROJECT_DIR$/optimizers/utils_optim.py" />
+        <option value="$PROJECT_DIR$/test_grid_search.py" />
+        <option value="$PROJECT_DIR$/NeuralNet/README.md" />
+        <option value="$PROJECT_DIR$/SRW_PROP/get_groud_true.py" />
+        <option value="$PROJECT_DIR$/SRW_PROP/configurations/esm_sample.py" />
+        <option value="$PROJECT_DIR$/SRW_PROP/optimizers/utils_reward.py" />
+        <option value="$PROJECT_DIR$/SRW_PROP/optimizers/utils_optim.py" />
+        <option value="$PROJECT_DIR$/SRW_PROP/README.md" />
+        <option value="$PROJECT_DIR$/SRW_PROP/Notes/ParticleSwarm.md" />
+        <option value="$PROJECT_DIR$/SRW_PROP/test_grid_search.py" />
       </list>
     </option>
   </component>
@@ -178,8 +232,8 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="4" />
-    <option name="y" value="2" />
+    <option name="x" value="-9" />
+    <option name="y" value="7" />
     <option name="width" value="1940" />
     <option name="height" value="1060" />
   </component>
@@ -189,6 +243,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -199,12 +254,60 @@
             <path>
               <item name="SRW_PROP" type="b2602c69:ProjectViewProjectNode" />
               <item name="SRW_PROP" type="462c0819:PsiDirectoryNode" />
-              <item name="checkpoints" type="462c0819:PsiDirectoryNode" />
+              <item name="NeuralNet" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="SRW_PROP" type="b2602c69:ProjectViewProjectNode" />
               <item name="SRW_PROP" type="462c0819:PsiDirectoryNode" />
-              <item name="results" type="462c0819:PsiDirectoryNode" />
+              <item name="SRW_PROP" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SRW_PROP" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SRW_PROP" type="462c0819:PsiDirectoryNode" />
+              <item name="SRW_PROP" type="462c0819:PsiDirectoryNode" />
+              <item name="Notes" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SRW_PROP" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SRW_PROP" type="462c0819:PsiDirectoryNode" />
+              <item name="SRW_PROP" type="462c0819:PsiDirectoryNode" />
+              <item name="TrueValues" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SRW_PROP" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SRW_PROP" type="462c0819:PsiDirectoryNode" />
+              <item name="SRW_PROP" type="462c0819:PsiDirectoryNode" />
+              <item name="TrueValues" type="462c0819:PsiDirectoryNode" />
+              <item name="ParticleSwarm" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SRW_PROP" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+            </path>
+            <path>
+              <item name="SRW_PROP" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; Python 3.6.1 (C:\Anaconda3\python.exe) &gt;" type="70bed36:NamedLibraryElementNode" />
+            </path>
+            <path>
+              <item name="SRW_PROP" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; Python 3.6.1 (C:\Anaconda3\python.exe) &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="SRW_PROP" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SRW_PROP" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; Python 3.6.1 (C:\Anaconda3\python.exe) &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="SRW_PROP" type="462c0819:PsiDirectoryNode" />
+              <item name="Notes" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SRW_PROP" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; Python 3.6.1 (C:\Anaconda3\python.exe) &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="SRW_PROP" type="462c0819:PsiDirectoryNode" />
+              <item name="TrueValues" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="SRW_PROP" type="b2602c69:ProjectViewProjectNode" />
@@ -214,17 +317,27 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/SRW_PROP" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="I:\Github\SRW_PROP\SRW_PROP\Notes" />
+      <recent name="I:\Github\SRW_PROP\SRW_PROP" />
+      <recent name="I:\Github\SRW_PROP\NeuralNet" />
       <recent name="I:\Github\SRW_PROP\Notes" />
       <recent name="I:\Github\SRW_PROP" />
-      <recent name="I:\Github\SRW_PROP\unittests" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="I:\Github\SRW_PROP\SRW_PROP\TrueValues\ParticleSwarm" />
+      <recent name="I:\Github\SRW_PROP\SRW_PROP\TrueValues" />
+      <recent name="I:\Github\SRW_PROP\SRW_PROP" />
+      <recent name="I:\Github\SRW_PROP\cache" />
+      <recent name="I:\Github\SRW_PROP\TrueValues\CoordinateAscent" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -239,8 +352,8 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.test_reinforce">
-    <configuration name="Modules" type="PythonConfigurationType" factoryName="Python" temporary="true">
+  <component name="RunManager" selected="Python.test_grid_search">
+    <configuration name="NSLS-II-ESM-beamline-Intensity-Sample-104.557m" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="SRW_PROP" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -248,18 +361,18 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/optimizers/NN_package" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="WORKING_DIRECTORY" value="F:/MyFiles/Downloads" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/optimizers/NN_package/Modules.py" />
+      <option name="SCRIPT_NAME" value="F:/MyFiles/Downloads/NSLS-II-ESM-beamline-Intensity-Sample-104.557m.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <configuration name="OpticNet_unittest" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="get_groud_true" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="SRW_PROP" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -267,31 +380,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/unittests" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/SRW_PROP" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/unittests/OpticNet_unittest.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
-    <configuration name="Reinforce_unittest" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="SRW_PROP" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/unittests" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/unittests/Reinforce_unittest.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/SRW_PROP/get_groud_true.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -305,31 +399,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/SRW_PROP" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_grid_search.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-    </configuration>
-    <configuration name="test_reinforce" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="SRW_PROP" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_reinforce.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/SRW_PROP/test_grid_search.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -337,18 +412,14 @@
     </configuration>
     <list>
       <item itemvalue="Python.test_grid_search" />
-      <item itemvalue="Python.Modules" />
-      <item itemvalue="Python.OpticNet_unittest" />
-      <item itemvalue="Python.Reinforce_unittest" />
-      <item itemvalue="Python.test_reinforce" />
+      <item itemvalue="Python.get_groud_true" />
+      <item itemvalue="Python.NSLS-II-ESM-beamline-Intensity-Sample-104.557m" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.test_reinforce" />
-        <item itemvalue="Python.Reinforce_unittest" />
-        <item itemvalue="Python.OpticNet_unittest" />
-        <item itemvalue="Python.Modules" />
         <item itemvalue="Python.test_grid_search" />
+        <item itemvalue="Python.get_groud_true" />
+        <item itemvalue="Python.NSLS-II-ESM-beamline-Intensity-Sample-104.557m" />
       </list>
     </recent_temporary>
   </component>
@@ -366,23 +437,23 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1066" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="4" weight="0.32905984" />
-      <window_info anchor="bottom" id="Event Log" order="0" sideWeight="0.50159746" side_tool="true" weight="0.32692307" />
+      <window_info anchor="bottom" id="Event Log" order="0" sideWeight="0.5021299" side_tool="true" weight="0.32478634" />
       <window_info anchor="bottom" id="Database Changes" order="1" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="12" weight="0.32905984" />
-      <window_info anchor="bottom" id="Python Console" order="5" weight="0.32905984" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49840257" weight="0.32371795" />
-      <window_info anchor="bottom" id="Terminal" order="6" weight="0.32795697" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19755058" />
+      <window_info anchor="bottom" id="Python Console" order="5" sideWeight="0.49946865" weight="0.32903227" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4978701" visible="true" weight="0.2905983" />
+      <window_info anchor="bottom" id="Terminal" order="6" sideWeight="0.49893504" weight="0.3268817" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18157615" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="4" weight="0.32996812" />
-      <window_info anchor="right" id="SciView" order="3" weight="0.32943678" />
+      <window_info anchor="right" id="SciView" order="3" weight="0.3343983" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.3611111" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49840596" weight="0.3611111" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="11" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -397,22 +468,22 @@
       <window_info anchor="bottom" id="Inspection" order="11" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="10" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19116081" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17678382" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="4" weight="0.32905984" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49840257" visible="true" weight="0.3258547" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4978701" visible="true" weight="0.2905983" />
       <window_info anchor="bottom" id="Message" order="8" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.3621795" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49840596" weight="0.3611111" />
       <window_info anchor="right" id="Database" order="4" weight="0.32996812" />
-      <window_info anchor="bottom" id="Terminal" order="6" weight="0.32799146" />
-      <window_info anchor="bottom" id="Event Log" order="0" sideWeight="0.50159746" side_tool="true" weight="0.32692307" />
+      <window_info anchor="bottom" id="Terminal" order="6" sideWeight="0.49893504" weight="0.3268817" />
+      <window_info anchor="bottom" id="Event Log" order="0" sideWeight="0.5021299" side_tool="true" weight="0.32478634" />
       <window_info anchor="bottom" id="Database Changes" order="1" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="12" weight="0.32905984" />
-      <window_info anchor="right" id="SciView" order="3" weight="0.32960597" />
+      <window_info anchor="right" id="SciView" order="3" weight="0.3343983" />
       <window_info anchor="bottom" id="Find" order="9" />
-      <window_info anchor="bottom" id="Python Console" order="5" weight="0.32905984" />
+      <window_info anchor="bottom" id="Python Console" order="5" sideWeight="0.49946865" weight="0.32903227" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -425,24 +496,14 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/optimizers/utils_run.py</url>
+          <url>file://$PROJECT_DIR$/SRW_PROP/optimizers/utils_run.py</url>
           <line>129</line>
           <option name="timeStamp" value="42" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/optimizers/utils_optim.py</url>
-          <line>357</line>
-          <option name="timeStamp" value="79" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/optimizers/utils_optim.py</url>
-          <line>353</line>
-          <option name="timeStamp" value="112" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/optimizers/utils_optim.py</url>
-          <line>245</line>
-          <option name="timeStamp" value="117" />
+          <url>file://$PROJECT_DIR$/SRW_PROP/optimizers/utils_optim.py</url>
+          <line>508</line>
+          <option name="timeStamp" value="134" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -452,273 +513,216 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="118" />
+      <option name="time" value="171" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
-        <watch expression="beamline.arrays" />
+        <watch expression="rewards" />
+        <watch expression="self.local_best_particles" />
+        <watch expression="self.global_best_particle" />
+        <watch expression="self.particles" />
       </configuration>
     </watches-manager>
   </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="watch">
+      <expression>
+        <expression-string>self.particle_rewards</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>self.particle_qualities</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
+  </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/cache/res_int_pr_se.dat" />
-    <entry file="file://$PROJECT_DIR$/configurations/smi_sample.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="17" column="42" selection-start-line="17" selection-start-column="42" selection-end-line="17" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uti_plot-196.png" />
-    <entry file="file://$PROJECT_DIR$/uti_plot-197.png" />
-    <entry file="file://$PROJECT_DIR$/uti_plot-76.png" />
-    <entry file="file://$PROJECT_DIR$/uti_plot-69.png" />
-    <entry file="file://$PROJECT_DIR$/uti_plot-253.png" />
-    <entry file="file://$PROJECT_DIR$/uti_plot-252.png" />
-    <entry file="file://$PROJECT_DIR$/uti_plot-453.png" />
-    <entry file="file://$PROJECT_DIR$/uti_plot-385.png" />
-    <entry file="file://$PROJECT_DIR$/uti_plot-384.png" />
-    <entry file="file://$PROJECT_DIR$/uti_plot-912.png" />
-    <entry file="file://$PROJECT_DIR$/uti_plot-913.png" />
-    <entry file="file://$PROJECT_DIR$/uti_plot-662.png" />
-    <entry file="file://$PROJECT_DIR$/uti_plot-663.png" />
-    <entry file="file://$PROJECT_DIR$/results/uti_plot-401.png" />
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="470">
-          <caret line="129" column="7" lean-forward="true" selection-start-line="129" selection-start-column="7" selection-end-line="129" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/configurations/hxn_sample.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="8" column="9" selection-start-line="8" selection-start-column="9" selection-end-line="8" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Anaconda3/Lib/site-packages/torch/nn/modules/conv.py">
+    <entry file="file://$USER_HOME$/.PyCharm2018.1/system/python_stubs/1013586911/numpy/random/mtrand.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="201">
-          <caret line="322" column="34" selection-start-line="322" selection-start-column="23" selection-end-line="322" selection-end-column="34" />
+          <caret line="2769" column="4" selection-start-line="2769" selection-start-column="4" selection-end-line="2769" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/LICENSE">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://C:/Anaconda3/Lib/site-packages/torch/nn/modules/linear.py">
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/srx_sample.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="71" selection-start-line="71" selection-end-line="71" />
+        <state relative-caret-position="443">
+          <caret column="23252" selection-start-column="23252" selection-end-column="23252" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/optimizers/NN_package/__init__.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/ivu21_srx_g20_0c.dat" />
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-842.png" />
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-843.png" />
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-362.png" />
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-503.png" />
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/res_int_se.dat" />
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-502.png" />
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/TrueValues/ParticleSwarm/uti_plot-302.png" />
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-403.png" />
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-343.png" />
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-383.png" />
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/fmx_sample.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="31597">
-          <caret line="1663" selection-start-line="1663" selection-end-line="1663" />
+        <state relative-caret-position="266">
+          <caret column="18746" selection-start-column="18738" selection-end-column="18746" />
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Anaconda3/Lib/site-packages/torch/nn/functional.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="1483" selection-start-line="1483" selection-end-line="1483" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Anaconda3/Lib/site-packages/torch/nn/modules/module.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="575" selection-start-line="575" selection-end-line="575" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../SRW/env/release/srw_python/srwlib.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="5268" selection-start-line="5268" selection-end-line="5268" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/unittests/cache/res_int_se.dat">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/unittests/cache/res_int_pr_se.dat">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8760083">
-          <caret line="461057" column="4" selection-start-line="461057" selection-start-column="4" selection-end-line="461057" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Anaconda3/Lib/os.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="224" selection-start-line="224" selection-end-line="224" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Anaconda3/Lib/zipfile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="1086" selection-start-line="1086" selection-end-line="1086" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/optimizers/utils_operation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="551">
-          <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/unittests/Reinforce_unittest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="12" column="40" selection-end-line="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/optimizers/NN_package/Trainers.py" />
-    <entry file="file://$PROJECT_DIR$/unittests/OpticNet_unittest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="22" column="37" lean-forward="true" selection-start-line="22" selection-start-column="37" selection-end-line="22" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Notes/REINFORCE.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="38">
-            <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Notes/Cordinate_Ascent.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="437">
-            <caret line="23" column="78" selection-start-line="23" selection-start-column="78" selection-end-line="23" selection-end-column="78" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/configurations/fmx_sample_2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="222" selection-start-line="222" selection-end-line="222" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/configurations/fmx_sample.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="893">
-          <caret line="50" column="18" selection-start-line="50" selection-end-line="50" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/configurations/csx_sample.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="509">
-          <caret line="277" column="30" selection-start-line="277" selection-start-column="15" selection-end-line="277" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/configurations/chx_sample.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-740">
-          <caret line="273" column="44" lean-forward="true" selection-start-line="273" selection-start-column="44" selection-end-line="273" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="506">
-            <caret line="59" column="42" selection-start-line="59" selection-start-column="42" selection-end-line="59" selection-end-column="42" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/uti_plot-4.png">
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/fmx_out.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/optimizers/NN_package/Memories.py">
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-683.png" />
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/fmx_in.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-923.png" />
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-483.png" />
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-643.png" />
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-943.png" />
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-783.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-2023.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-1163.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/optimizers/utils_run.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="12" column="82" selection-start-line="12" selection-start-column="82" selection-end-line="12" selection-end-column="82" />
+        <state relative-caret-position="577">
+          <caret line="42" selection-start-line="42" selection-end-line="42" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/uti_plot-5.png">
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-1503.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/optimizers/utils_reward.py">
+    <entry file="file://C:/Anaconda3/Lib/site-packages/numpy/core/_methods.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-9">
-          <caret line="52" column="10" selection-start-line="52" selection-start-column="10" selection-end-line="52" selection-end-column="10" />
+        <state relative-caret-position="212">
+          <caret line="27" selection-start-line="27" selection-end-line="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-363.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-283.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/TrueValues/ParticleSwarm/uti_plot-303.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/esm_in.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/esm_out.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-323.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/sim_out.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/TrueValues/CoordinateAscent/srx_out.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-303.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-263.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-163.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-663.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-963.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-903.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-259.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/Notes/REINFORCE.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor>
+            <caret selection-end-line="1" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/optimizers/utils_reward.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="14" selection-start-column="14" selection-end-column="14" />
           <folding>
             <element signature="e#116#134#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/optimizers/utils_run.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="83" selection-start-line="83" selection-end-line="83" />
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="477">
+            <caret line="111" column="21" selection-start-line="111" selection-start-column="21" selection-end-line="111" selection-end-column="21" />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/results/test.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="628">
-          <caret column="18839" selection-start-column="18821" selection-end-column="18839" />
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/Notes/Cordinate_Ascent.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_grid_search.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" column="30" selection-start-line="1" selection-start-column="20" selection-end-line="1" selection-end-column="30" />
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/TrueValues/ParticleSwarm/uti_plot-467.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/Notes/ParticleSwarm.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="399">
+            <caret line="21" column="42" selection-start-line="21" selection-start-column="42" selection-end-line="21" selection-end-column="42" />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/optimizers/NN_package/Modules.py">
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/optimizers/utils_optim.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="356">
-          <caret line="188" column="30" selection-start-line="188" selection-start-column="23" selection-end-line="188" selection-end-column="30" />
-          <folding>
-            <element signature="e#116#128#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test_reinforce.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="359">
-          <caret line="25" selection-start-line="25" selection-end-line="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/optimizers/utils_optim.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="468">
-          <caret line="293" column="59" selection-start-line="293" selection-start-column="59" selection-end-line="293" selection-end-column="59" />
+        <state relative-caret-position="224">
+          <caret line="265" column="60" selection-start-line="264" selection-start-column="22" selection-end-line="265" selection-end-column="60" />
           <folding>
             <element signature="e#119#130#0" expanded="true" />
           </folding>
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/test_grid_search.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="1" column="30" selection-start-line="1" selection-start-column="30" selection-end-line="1" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SRW_PROP/uti_plot-211.png">
+      <provider selected="true" editor-type-id="images" />
     </entry>
   </component>
 </project>
