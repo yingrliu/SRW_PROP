@@ -1,5 +1,5 @@
-from optimizers.utils_optim import OptimCoordinateAscent, OptimParticleSwarm
-from configurations.smi_sample import *
+from optimizers.utils_optim import OptimCoordinateAscent, OptimParticleSwarm, OptimGeneticAlgorithm
+from configurations.fmx_sample import *
 
 if __name__ == "__main__":
     # todo:
@@ -11,7 +11,10 @@ if __name__ == "__main__":
     #                               step_size=0.10)
     Optimizer = OptimParticleSwarm(names, setting_params, physics_params, propagation_params, tunable_params,
                                       set_up_funcs)
+    # Optimizer = OptimGeneticAlgorithm(names, setting_params, physics_params, propagation_params, tunable_params,
+    #                                set_up_funcs, step_size=0.1)
     # Optimizer.forward(saveto=None)
     Optimizer.forward(velocity_range=0.50, inertia_coeff=0.5, cognitive_coeff=1.5,
-                      social_coeff=1.5, step_size=0.5, saveto='TrueValues/ParticleSwarm/smi_sample.json')
+                      social_coeff=1.5, step_size=0.5, saveto=None) # 'TrueValues/ParticleSwarm/smi_sample.json'
+    # Optimizer.forward(num_particles=10, prob_crossover=0.3, prob_mutation=0.1)
     print()

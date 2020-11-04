@@ -290,9 +290,101 @@ class OptimParticleSwarm(_optimizer):
 
 
 # TODO:
-class OptimGeneticParticleSwarm(_optimizer):
-    pass
+class OptimGeneticAlgorithm(_optimizer):
+    """
+    Genetic Algorithm.
+    """
+    def __init__(self, names, setting_params, physics_params, prop_params, tunable_params, set_up_funcs, step_size):
+        """
 
+        :param names: list of strings that indicates each instruments.
+        :param setting_params: the general setting parameters of the experiments.
+        :param physics_params: the physical parameters of the experiments.
+        :param prop_params: the propagation parameters of the experiments.
+        :param tunable_params: Dict[tuple1, tuple2] -- a dictionary indicating the position (tuple1) and range (tuple2) of the tunable prop params.
+        :param set_up_funcs: set_up function for the beamline.
+        :param step_size: the step_size of each iteration.
+        """
+        super(OptimGeneticAlgorithm, self).__init__(names, setting_params, physics_params, prop_params, tunable_params,
+                                                set_up_funcs)
+        self.step_size = step_size
+        return
+
+    def init_population(self, num_particles):
+        self._initiation()
+        self.init_values  = np.asarray(
+            [scale[0] for pos, scale in zip(self.tunable_params_positions, self.tunable_params_ranges)]
+            )
+        self.particles = np.random.multinomial(10, [1./ len(self.tunable_params_positions)] * len(self.tunable_params_positions),
+                                               size=num_particles)
+        self.best_particle = copy.deepcopy(self.init_values)
+        self.best_quality = self.prv_quality
+        self.best_score  = self.best_quality / self._get_reward()[:, -1].mean()
+        # evaluate the fitness.
+        self.fitness, qualities = self.get_fitness()
+        best_idx = np.argmax(self.fitness)
+        self.best_quality = qualities[best_idx]
+        self.best_score = self.fitness[best_idx]
+        self.best_particle = copy.deepcopy(self.particles[best_idx])
+        return
+
+    def get_fitness(self):
+        fitness, qualities = [], []
+        for particle in self.particles:
+            self._initiation({pos: self.best_particle[i] for i, pos in enumerate(self.tunable_params_positions)})
+            tuned_params = self.decoding(particle)
+            #
+            self.set_prop_params({pos: tuned_params[i] for i, pos in enumerate(self.tunable_params_positions)})
+            self._operate_experiments(plot=False)
+            #
+            rewards = self._get_reward()
+            fitness.append((self.best_quality + rewards[:, 2].mean()) / rewards[:, -1].mean())
+            qualities.append(self.best_quality + rewards[:, 2].mean())
+        return np.asarray(fitness), np.asarray(qualities)
+
+    def decoding(self, particle):
+        tuned_params = self.init_values + np.maximum(particle, self.best_particle) * self.step_size
+        for i, scale in enumerate(self.tunable_params_ranges):
+            tuned_params[i] = np.clip(tuned_params[i], scale[0], scale[1])
+        return tuned_params
+
+    @staticmethod
+    def crossover(self, particleA, particleB, prob):
+        return
+
+    @staticmethod
+    def mutation(self, particle, prob):
+        return
+
+    def single_step(self, prob_crossover, prob_mutation):
+        # parent selection.
+        fitness = self.fitness / self.fitness.mean()
+        num_particles  = self.particles.shape[0]
+        parents = []
+        for _ in range(num_particles):
+            best_idx = np.argmax(fitness)
+            if fitness[best_idx] >= 1.0:
+                parents.append(self.particles[best_idx])
+                fitness[best_idx] = fitness[best_idx] - 1.0
+            else:
+
+        return
+
+    def forward(self, num_particles, prob_crossover, prob_mutation, num_steps=100, early_stopping=1, saveto=None):
+        self.init_population(num_particles)
+        best_reward, bad_steps = self.best_score, 0
+        for step in range(num_steps):
+            self.single_step(prob_crossover, prob_mutation)
+            # print(step, '\t', self.global_best_particle.tolist(), '\t', self.global_best_reward)
+            # if self.global_best_reward > best_reward:
+            #     best_reward = self.global_best_reward
+            #     bad_steps = 0
+            # else:
+            #     bad_steps += 1
+            # if bad_steps >= early_stopping:
+            #     break
+        # Print the tunning results.
+        return
 
 # TODO:
 class OptimReinforce(_optimizer):
