@@ -29,7 +29,8 @@ def run_experiment(names, setting_params, physics_params, propagation_params, se
         raise ValueError("set_optics() function should be included in set_up_funcs")
     # this part is different for different beamline?
     v.ws = True
-    v.ws_pl = 'xy'
+    if plot:
+        v.ws_pl = 'xy'
     mag = None
     if v.rs_type == 'm':
         mag = srwlib.SRWLMagFldC()

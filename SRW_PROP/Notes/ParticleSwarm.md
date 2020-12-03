@@ -21,5 +21,8 @@ briefly given as follows.
     - Therefore, the number of particles is now equaled to the dimensions 
     of the tunable propagation parameters.
 
-All of them have closed performance. Therefore, only the version 3 is kept
-in this repository.
+- **Version 4:** [Fully Deterministic PSO]
+    
+    - normalize the velocities by the norm.
+
+Only the version 4 is kept in this repository.

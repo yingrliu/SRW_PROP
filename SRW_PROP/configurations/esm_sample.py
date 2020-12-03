@@ -395,7 +395,7 @@ def set_optics(v=None):
                 _x=v.op_Grating_x,
                 _y=v.op_Grating_y,
             )
-            el.append(srwlib.SRWLOptG(
+            opEl=srwlib.SRWLOptG(
                 _mirSub=mirror,
                 _m=v.op_Grating_m,
                 _grDen=v.op_Grating_grDen,
@@ -403,8 +403,14 @@ def set_optics(v=None):
                 _grDen2=v.op_Grating_grDen2,
                 _grDen3=v.op_Grating_grDen3,
                 _grDen4=v.op_Grating_grDen4,
-            ))
+                _e_avg=v.op_Grating_e_avg,
+                _cff=v.op_Grating_cff,
+                _ang_graz=v.op_Grating_ang,
+                _ang_roll=v.op_Grating_rollAngle,
+            )
+            el.append(opEl)
             pp.append(v.op_Grating_pp)
+
         elif el_name == 'GA':
             # GA: aperture 55.0m
             el.append(srwlib.SRWLOptA(

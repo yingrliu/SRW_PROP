@@ -43,8 +43,6 @@ def get_difference(array_new, array_old, mesh_new, mesh_old, alpha_ratio):
     # interpolation array1, so its size is same as array2. 
     shape_new = array_new.shape
     shape_old = array_old.shape
-    normal_term = array_new.max() + 1e-2
-    array_new, array_old = array_new / normal_term, array_old / normal_term
     # Find the mesh of each array.
     meshx_new = np.linspace(mesh_new[0][0], mesh_new[0][1], shape_new[1])
     meshy_new = np.linspace(mesh_new[1][0], mesh_new[1][1], shape_new[0])
@@ -57,7 +55,8 @@ def get_difference(array_new, array_old, mesh_new, mesh_old, alpha_ratio):
     # Interpolate the old array to the new mesh.
     f = interpolate.interp2d(meshx_old, meshy_old, array_old, kind='quintic')
     array_old = f(meshx_new, meshy_new)
-    return np.sqrt(((array_new - array_old) ** 2).mean())
+    return np.sqrt(((array_new - array_old) ** 2).mean()) / (array_old.mean() + 1e-2)
+
 
 # compute the penalty for runtime.
 def get_complexity(prop_params, alpha=0.01, exponential=True):
