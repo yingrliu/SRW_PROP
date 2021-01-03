@@ -17,14 +17,138 @@ and change the path as `PATH_TO_SRW\env\work\srw_python` in `SRW.pth` to the pat
 the git.
 
 ## Optimizers
-### 1. Coordinate Ascent
-#### 1.1. Descriptions
-The **coordinate Ascent** is the simplest global search method to discover the optimal
-propagation parameters by gradually increasing the values in the tunable parameter
-list with a fix step-size. The interface is defined as 
+### General Usage
+
+In order to use the implemented optimizers in this package, we need to download python
+scripts from Sirepo, and split the parameter list into three different parts 
+(setting_params, propagation_params, physics_params). The whole required components are
+given as follows:
+
+- names [List]: the lists of the optics elements inside the beamline. e.g.
+    ```python
+    names = ['S0', 'S0_HFM', 'HFM', 'HFM_S1', 'S1', 'S1_DCM_C1', 'DCM_C1', 'DCM_C2', 'DCM_C2_At_BPM1', 'At_BPM1',
+         'At_BPM1_Before_SSA', 'Before_SSA', 'SSA', 'SSA_AKB', 'AKB', 'AKB_KBV', 'KBV', 'KBV_KBH', 'KBH',
+         'KBH_At_Sample', 'At_Sample']
+    ```
+    
+- setting_params [List]: the first two lines in the parameter list in the downloaded 
+python script. e.g.
+    ```python
+    setting_params = [
+      ['name', 's', 'NSLS-II SRX beamline', 'simulation name'],
+      # ---Data Folder
+      ['fdir', 's', '', 'folder (directory) name for reading-in input and saving output data files']
+    ]
+    ```
+
+- physics_params [List]: the physics setting lines in the parameter list in the downloaded 
+python script. e.g.
+    ```python
+    physics_params = [
+        #---Electron Beam
+        ['ebm_nm', 's', '', 'standard electron beam name'],
+        ['ebm_nms', 's', '', 'standard electron beam name suffix: e.g. can be Day1, Final'],
+        ['ebm_i', 'f', 0.5, 'electron beam current [A]'],
+        ['ebm_e', 'f', 3.0, 'electron beam avarage energy [GeV]'],
+        ['ebm_de', 'f', 0.0, 'electron beam average energy deviation [GeV]'],
+        ['ebm_x', 'f', 0.0, 'electron beam initial average horizontal position [m]'],
+        ['ebm_y', 'f', 0.0, 'electron beam initial average vertical position [m]'],
+        ['ebm_xp', 'f', 0.0, 'electron beam initial average horizontal angle [rad]'],
+        ['ebm_yp', 'f', 0.0, 'electron beam initial average vertical angle [rad]'],
+        ['ebm_z', 'f', 0., 'electron beam initial average longitudinal position [m]'],
+        ['ebm_dr', 'f', 0.0, 'electron beam longitudinal drift [m] to be performed before a required calculation'],
+        ['ebm_ens', 'f', 0.00089, 'electron beam relative energy spread'],
+        ['ebm_emx', 'f', 9e-10, 'electron beam horizontal emittance [m]'],
+        ['ebm_emy', 'f', 8e-12, 'electron beam vertical emittance [m]'],
+          ...
+    ]
+    ```
+
+- propagation_params [List]: the propagation parameter part in the parameter list in the downloaded 
+python script. I have to save this part as a single list to tune the correct positions.  e.g.
+    ```python
+    propagation_params = [
+        #---Propagation parameters
+        ['op_S0_pp', 'f',                 [0, 0, 1.0, 0, 0, 1.1, 7.0, 1.3, 10.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'S0'],
+        ['op_S0_HFM_pp', 'f',             [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'S0_HFM'],
+        ['op_HFM_pp', 'f',                [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'HFM'],
+        ['op_HFM_S1_pp', 'f',             [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'HFM_S1'],
+        ['op_S1_pp', 'f',                 [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'S1'],
+        ['op_S1_DCM_C1_pp', 'f',          [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'S1_DCM_C1'],
+        ['op_DCM_C1_pp', 'f',             [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'DCM_C1'],
+        ['op_DCM_C2_pp', 'f',             [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'DCM_C2'],
+        ['op_DCM_C2_At_BPM1_pp', 'f',     [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'DCM_C2_At_BPM1'],
+        ['op_At_BPM1_Before_SSA_pp', 'f', [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'At_BPM1_Before_SSA'],
+        ['op_SSA_pp', 'f',                [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'SSA'],
+        ['op_SSA_AKB_pp', 'f',            [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'SSA_AKB'],
+        ['op_AKB_pp', 'f',                [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'AKB'],
+        ['op_AKB_KBV_pp', 'f',            [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'AKB_KBV'],
+        ['op_KBV_pp', 'f',                [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBV'],
+        ['op_KBV_KBH_pp', 'f',            [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBV_KBH'],
+        ['op_KBH_pp', 'f',                [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBH'],
+        ['op_KBH_At_Sample_pp', 'f',      [0, 0, 1.0, 4, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBH_At_Sample'],
+        ['op_fin_pp', 'f',                [0, 0, 1.0, 0, 1, 0.5, 1.0, 0.2, 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'final post-propagation (resize) parameters'],
+    ]
+    ```
+- set_up_funcs [List]: the list of set-up functions used to run the experiments. e.g.
+    ```python
+    def set_optics(v=None):
+        el = []
+        pp = []
+        for el_name in names:
+            if el_name == 'S0':
+                # S0: aperture 33.1798m
+                el.append(srwlib.SRWLOptA(
+                    _shape=v.op_S0_shape,
+                    _ap_or_ob='a',
+                    _Dx=v.op_S0_Dx,
+                    _Dy=v.op_S0_Dy,
+                    _x=v.op_S0_x,
+                    _y=v.op_S0_y,
+                ))
+                pp.append(v.op_S0_pp)
+            elif el_name == 'S0_HFM':
+                # S0_HFM: drift 33.1798m
+                el.append(srwlib.SRWLOptD(
+                    _L=v.op_S0_HFM_L,
+                ))
+                pp.append(v.op_S0_HFM_pp)
+            elif el_name == 'At_Sample':
+                # At_Sample: watch 63.3m
+                pass
+        pp.append(v.op_fin_pp)
+        return srwlib.SRWLOptC(el, pp)
+
+    def setup_magnetic_measurement_files(v, filename="configurations/magn_meas_srx.zip"):
+        import os
+        import re
+        import zipfile
+        z = zipfile.ZipFile(filename)
+        z.extractall()
+        for f in z.namelist():
+            if re.search(r'\.txt', f):
+                v.und_mfs = os.path.basename(f)
+                v.und_mdir = os.path.dirname(f) or './'
+                return
+        raise RuntimeError('missing magnetic measurement index *.txt file')
+    
+    # set-up functions.
+    set_up_funcs = [setup_magnetic_measurement_files, set_optics]
+    ```
+
+
+- tunable_params [Dict(tuple, tuple)]: the lists of tunable positions in the propagation parameters.
+the keys denote the position in the `propagation_params` and the values are the valid range of the parameter.
+
+
+### Implemented Methods
+#### 1. Grid Search
+The **Grid Search** method splits the parameter spaces into grid by fixed step-size.
+Starting from the minimum parameter values given by `tunable_params`, it gradually 
+increases the parameters through the grid. The class is initiated as
 ```python
-OptimCoordinateAscent(names, setting_params, physics_params, prop_params, 
-                  tunable_params, set_up_funcs)
+OptimGridSearch(names, names, setting_params, physics_params, prop_params, tunable_params, 
+set_up_funcs, step_size)
 ```
 where the parameters are given as
 
@@ -34,29 +158,71 @@ where the parameters are given as
 - prop_params: the propagation parameters of optics instruments.
 - tunable_params: the positions and ranges of tunable **propagation parameters**.
 - set_up_funcs: the set-up function required (and also different) for each beamline.
-- step_size: the learning rate of each iteration.
+- step_size (suggest value = 1.0): the step-size of each iteration.
 
 A example of usage is given as 
 ```python
-from optimizers.utils_optim import OptimCoordinateAscent
+from optimizers.utils_optim import OptimGridSearch
 from configurations.fmx_sample_2 import *
 
 if __name__ == "__main__":
     tunable_params = {}
     for item in index_list:
         tunable_params[item] = [0.75, 5.0] if item[-1] in [5, 7] else [1., 10.]
-    Optimizer = OptimCoordinateAscent(names, setting_params, physics_params, propagation_params, tunable_params, set_up_funcs,
+    Optimizer = OptimGridSearch(names, setting_params, physics_params, propagation_params, tunable_params, set_up_funcs,
                                   step_size=0.1)
     Optimizer.forward(saveto='./results/test.json')
     print()
 ```
 
-#### 1.2. Update Notes
-[`Notes/Cordinate_Ascent.md`](Notes/Cordinate_Ascent.md)
+#### 2. Coordinate Ascent
+The **coordinate Ascent** first compute a (pseudo) graident of a parameter and then upgrade it. 
+The class is defined as 
+```python
+OptimGradientCoordinate(names, setting_params, physics_params, prop_params, 
+                  tunable_params, set_up_funcs, step_size=1.0, learning_rate=1e-2)
+```
+where the parameters are given as
 
-### 2. Particle Swarms Optimization
+- names: the sequence of optics instrument names.
+- setting_params: some global setting parameters.
+- physics_params: the physics parameters of optics instruments.
+- prop_params: the propagation parameters of optics instruments.
+- tunable_params: the positions and ranges of tunable **propagation parameters**.
+- set_up_funcs: the set-up function required (and also different) for each beamline.
+- step_size _(suggest value = 0.1)_: the step-size to approximate the gradient. 
+- learning_rate _(suggest value = 5.0)_: the learning rate to update the parameters.
 
-#### 2.1. Descriptions
+Usage is same as **Grid Search** except the class definition.
+
+#### 3. Coordinate Ascent with Momentum
+The **coordinate Ascent with Momentum** first compute a (pseudo) graident of a parameter 
+and then upgrade it. Furthermore, it will save the previous update term as momentum
+to speed up the convergence.
+The class is defined as 
+```python
+OptimMomentumCoordinate(names, setting_params, physics_params, prop_params, 
+                  tunable_params, set_up_funcs, step_size=1.0, learning_rate=1e-2,
+                  , beta=0.9)
+```
+where the parameters are given as
+
+- names: the sequence of optics instrument names.
+- setting_params: some global setting parameters.
+- physics_params: the physics parameters of optics instruments.
+- prop_params: the propagation parameters of optics instruments.
+- tunable_params: the positions and ranges of tunable **propagation parameters**.
+- set_up_funcs: the set-up function required (and also different) for each beamline.
+- step_size _(suggest value = 0.1)_: the step-size to approximate the gradient. 
+- learning_rate _(suggest value = 5.0)_: the learning rate to update the parameters.
+- beta _(suggest value = 0.9)_: coefficent to control the contribution of momentum term.
+
+Usage is same as **Grid Search** except the class definition.
+
+#### 4. Adam
+ 
+#### 5. Particle Swarms Optimization
+
 The **particle swarm optimization (PSO)** randomly initiates a population of
 candidate solutions (particles). At each iteration, the particles are updated 
 by the global best particle and the best historical particle of their own.
@@ -77,12 +243,13 @@ where the parameters are given as
 and
 
 ```python
-OptimParticleSwarm(*args, **kargs).forward(velocity_range, inertia_coeff, 
+OptimParticleSwarm(*args, **kargs).forward(num_particles, velocity_range, inertia_coeff, 
             cognitive_coeff,  social_coeff, step_size, num_steps, 
             early_stopping, saveto)
 ```
 where the parameters are given as
 
+- num_particles: number of particles.
 - velocity_range: the maximum value of the velocity.
 - inertia_coeff: inertia coefficient of PSO.
 - cognitive_coeff: cognitive coefficient of PSO.
@@ -103,16 +270,9 @@ if __name__ == "__main__":
         tunable_params[item] = [0.75, 5.0] if item[-1] in [5, 7] else [1., 10.]
     Optimizer = OptimParticleSwarm(names, setting_params, physics_params, propagation_params, tunable_params,
                                       set_up_funcs)
-    Optimizer.forward(velocity_range=0.50, inertia_coeff=0.5, cognitive_coeff=1.5,
+    Optimizer.forward(velocity_range=0.50, num_particles=5,inertia_coeff=0.5, cognitive_coeff=1.5,
                       social_coeff=1.5, step_size=0.5, saveto='TrueValues/ParticleSwarm/smi_sample.json')
-    print()
 ```
 
-#### 2.2. Update Notes
-[`Notes/ParticleSwarm.md`](Notes/ParticleSwarm.md)
 
-### 3. REINFROCE
-#### 3.1. Descriptions
-
-#### 3.2. Update Notes
-[`Notes/REINFORCE.md`](Notes/REINFORCE.md)
+#### 6. REINFROCE

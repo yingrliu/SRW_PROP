@@ -22,7 +22,7 @@ def get_state(params):
 #############################################################################
 # compute the total reward of current step.
 def get_total_rewards(array_new, array_old, mesh_new, mesh_old, prv_quality, params_new,
-                      alpha_cpl=1e-2, alpha_ratio=1e-2):
+                      alpha_cpl=1e-1, alpha_ratio=1e-2):
     """
 
     :param array_new:
@@ -40,7 +40,7 @@ def get_total_rewards(array_new, array_old, mesh_new, mesh_old, prv_quality, par
 
 #
 def get_difference(array_new, array_old, mesh_new, mesh_old, alpha_ratio):
-    # interpolation array1, so its size is same as array2. 
+    # interpolation array1, so its size is same as array2.
     shape_new = array_new.shape
     shape_old = array_old.shape
     # Find the mesh of each array.
@@ -55,7 +55,7 @@ def get_difference(array_new, array_old, mesh_new, mesh_old, alpha_ratio):
     # Interpolate the old array to the new mesh.
     f = interpolate.interp2d(meshx_old, meshy_old, array_old, kind='quintic')
     array_old = f(meshx_new, meshy_new)
-    return np.sqrt(((array_new - array_old) ** 2).mean()) / (array_old.mean() + 1e-2)
+    return np.sqrt(((array_new - array_old) ** 2).mean()) / (array_new.max() + 1e-2)
 
 
 # compute the penalty for runtime.
@@ -65,8 +65,8 @@ def get_complexity(prop_params, alpha=0.01, exponential=True):
     """
     complexity = 1
     for n, param in enumerate(prop_params):
-        complexity += param[2][5] * param[2][6] * param[2][7] * param[2][8]
-    complexity /= len(prop_params)
+        complexity *= param
+    complexity = np.log(complexity) / len(prop_params)
     return np.exp(alpha * complexity) if exponential else alpha * complexity
 
 

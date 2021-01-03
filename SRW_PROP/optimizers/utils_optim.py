@@ -86,8 +86,11 @@ class _optimizer():
         get the reward of the current experiment run.
         :return: rewards = [reward-score, accumulated quality, difference in this step, complexity]
         """
+        param_list = []
+        for position in self.tunable_params_positions:
+            param_list.append(self.prop_params[position[0]][2][position[1]])
         rewards = np.asarray([get_total_rewards(array_new=current, array_old=prev, mesh_new=mesh, mesh_old=mesh_old,
-                                                prv_quality=self.prv_quality, params_new=self.prop_params)
+                                                prv_quality=self.prv_quality, params_new=param_list)
                               for mesh_old, mesh, prev, current in zip(self.prv_mesh, self.mesh, self.prv_arrays, self.arrays)])
         return rewards
 
@@ -106,7 +109,7 @@ class _optimizer():
 
 
 
-class OptimGridSearchIterative(_optimizer):
+class OptimGridSearch(_optimizer):
     """
     GridSearch for each dimension iteratively.
     """
@@ -121,7 +124,7 @@ class OptimGridSearchIterative(_optimizer):
         :param set_up_funcs: set_up function for the beamline.
         :param step_size: the step_size of each iteration.
         """
-        super(OptimGridSearchIterative, self).__init__(names, setting_params, physics_params, prop_params, tunable_params,
+        super(OptimGridSearch, self).__init__(names, setting_params, physics_params, prop_params, tunable_params,
                                                 set_up_funcs)
         self.step_size = step_size
         return
@@ -176,89 +179,12 @@ class OptimGridSearchIterative(_optimizer):
         return tuned_params
 
 
-class OptimGridSearchOptimal(OptimGridSearchIterative):
-    """
-    Grid Search when each iteration we only choose the optimal dimension.
-    """
-    def __init__(self, names, setting_params, physics_params, prop_params, tunable_params, set_up_funcs, step_size=0.20):
-        """
-
-        :param names: list of strings that indicates each instruments.
-        :param setting_params: the general setting parameters of the experiments.
-        :param physics_params: the physical parameters of the experiments.
-        :param prop_params: the propagation parameters of the experiments.
-        :param tunable_params: Dict[tuple1, tuple2] -- a dictionary indicating the position (tuple1) and range (tuple2) of the tunable prop params.
-        :param set_up_funcs: set_up function for the beamline.
-        :param step_size: the step_size of each iteration.
-        """
-        super(OptimGridSearchOptimal, self).__init__(names, setting_params, physics_params, prop_params, tunable_params,
-                                                set_up_funcs, step_size)
-        return
-
-    def forward(self, saveto=None):
-        """
-        run the optimization process.
-        :param saveto: a path to save the tuning results in .json.
-        :return:
-        """
-        tuned_params = {}
-        # Initiate the optimization process.
-        self._initiation()
-        total_updates, global_best_reward = 0, self._get_reward()[:, 0].mean()
-        # Optimization process.
-        print("------------> Tuning parameters.")
-        updates = len(self.tunable_params_positions)
-        while updates:
-            new_updates = 0
-            iterative_best_reward, tuned_position, tuned_value = 0., None, None
-            for n, position in enumerate(self.tunable_params_positions):
-                # define new values after update.
-                prev_value = self.prop_params[position[0]][2][position[1]]
-                new_value = self.prop_params[position[0]][2][position[1]] + self.step_size
-                if not (self.tunable_params_ranges[n][0] < new_value < self.tunable_params_ranges[n][1]):
-                    continue
-                # update the mesh, mesh_old, array, array_old and get rewards.
-                updata_param(self.prop_params, position, new_value)
-                self._operate_experiments(plot=False)
-                rewards = self._get_reward()
-                current_reward = rewards[:, 0].mean()
-                # reset.
-                updata_param(self.prop_params, position, prev_value)
-                # check whether it is the best choice in this iteration.
-                if current_reward > iterative_best_reward:
-                    iterative_best_reward = current_reward
-                    tuned_position = position
-                    tuned_value = new_value
-            # see whether the tuning improves the experiments.
-            if iterative_best_reward - global_best_reward > 1e-4:
-                # update parameters.
-                new_updates += 1
-                print(tuned_position, '\t', tuned_value, '\t', iterative_best_reward)
-                tuned_params[tuned_position] = tuned_value
-                global_best_reward = iterative_best_reward
-                updata_param(self.prop_params, tuned_position, tuned_value)
-                self._operate_experiments(plot=False)
-                rewards = self._get_reward()
-                self.prv_arrays, self.prv_mesh, self.prv_quality = copy.deepcopy(self.arrays), \
-                                                                   copy.deepcopy(self.mesh), rewards[:, 1].mean()
-            updates = new_updates
-            total_updates += new_updates
-        # Print the tunning results.
-        print("------------> Finish Optimization.")
-        print(tuned_params)
-        print("\x1b[1;35mThe number of updates: {}; the best reward: {}.\x1b[0m".format(total_updates, global_best_reward))
-        if saveto:
-            save_params(self.physics_params, self.prop_params, tuned_params, saveto)
-        self._operate_experiments(plot=True)
-        return tuned_params
-
-
 class OptimGradientCoordinate(_optimizer):
     """
     Coordinate Ascent with the approximation of the gradient.
     """
     def __init__(self, names, setting_params, physics_params, prop_params, tunable_params, set_up_funcs,
-                 step_size=0.10, learning_rate=1e-2):
+                 step_size=1.0, learning_rate=1e-2):
         """
 
         :param names: list of strings that indicates each instruments.
@@ -300,14 +226,17 @@ class OptimGradientCoordinate(_optimizer):
                 gradient = rewards[:, 2].mean() / self.step_size
                 # update the parameters.
                 # new_value = prev_value + max(1, self.learning_rate * gradient // self.step_size) * self.step_size
-                new_value = prev_value + max(self.learning_rate * gradient, self.step_size)
+                velocity = self.learning_rate * gradient
+                if velocity < self.step_size:
+                    continue
+                new_value = prev_value + velocity
                 updata_param(self.prop_params, position, new_value)
                 self._operate_experiments(plot=False)
                 rewards = self._get_reward()
                 current_reward = rewards[:, 0].mean()
                 print(position, '\t', new_value, '\t', current_reward)
                 # check whether there is improvement.
-                if current_reward - global_best_reward > 1e-4:
+                if current_reward - global_best_reward > 5e-4:
                     # update parameters.
                     new_updates += 1
                     tuned_params[position] = new_value
@@ -379,11 +308,12 @@ class OptimMomentumCoordinate(_optimizer):
                 rewards = self._get_reward()
                 gradient = rewards[:, 2].mean() / self.step_size
                 if momentums[n]:
-                    velocity = max(self.learning_rate * gradient, self.step_size) * (1. - self.beta) + momentums[n] * self.beta
+                    velocity = self.learning_rate * gradient * (1. - self.beta) + momentums[n] * self.beta
                 else:
-                    velocity = max(self.learning_rate * gradient, self.step_size)
+                    velocity = self.learning_rate * gradient
+                if velocity < self.step_size:
+                    continue
                 # update the parameters.
-                # new_value = prev_value + max(1, self.learning_rate * gradient // self.step_size) * self.step_size
                 new_value = prev_value + velocity
                 updata_param(self.prop_params, position, new_value)
                 self._operate_experiments(plot=False)
@@ -391,7 +321,7 @@ class OptimMomentumCoordinate(_optimizer):
                 current_reward = rewards[:, 0].mean()
                 print(position, '\t', new_value, '\t', current_reward)
                 # check whether there is improvement.
-                if current_reward - global_best_reward > 1e-4:
+                if current_reward - global_best_reward > 5e-4:
                     # update parameters.
                     new_updates += 1
                     tuned_params[position] = new_value
