@@ -5,7 +5,6 @@
 import numpy as np
 import scipy.signal as sci_signal
 from scipy import interpolate
-from skimage.metrics import structural_similarity as ssim
 
 #############################################################################
 #                         Currently Useless Tool                            #
@@ -22,7 +21,7 @@ def get_state(params):
 #############################################################################
 # compute the total reward of current step.
 def get_total_rewards(array_new, array_old, mesh_new, mesh_old, prv_quality, params_new,
-                      alpha_cpl=1e-1, alpha_ratio=1e-2):
+                      alpha_cpl=5e-2, alpha_ratio=1e-2):
     """
 
     :param array_new:
@@ -41,21 +40,25 @@ def get_total_rewards(array_new, array_old, mesh_new, mesh_old, prv_quality, par
 #
 def get_difference(array_new, array_old, mesh_new, mesh_old, alpha_ratio):
     # interpolation array1, so its size is same as array2.
-    shape_new = array_new.shape
-    shape_old = array_old.shape
-    # Find the mesh of each array.
-    meshx_new = np.linspace(mesh_new[0][0], mesh_new[0][1], shape_new[1])
-    meshy_new = np.linspace(mesh_new[1][0], mesh_new[1][1], shape_new[0])
-    meshx_old = np.linspace(mesh_old[0][0], mesh_old[0][1], shape_old[1])
-    meshy_old = np.linspace(mesh_old[1][0], mesh_old[1][1], shape_old[0])
-    # Find the mesh area of the new array that we are interested in.
-    rangex, rangey = get_image_ratios(array_new, alpha_ratio)
-    array_new, meshx_new, meshy_new = array_new[rangey[0]:rangey[1]+1, rangex[0]:rangex[1]+1], \
-                                      meshx_new[rangex[0]:rangex[1]+1], meshy_new[rangey[0]:rangey[1]+1]
-    # Interpolate the old array to the new mesh.
-    f = interpolate.interp2d(meshx_old, meshy_old, array_old, kind='quintic')
-    array_old = f(meshx_new, meshy_new)
-    return np.sqrt(((array_new - array_old) ** 2).mean()) / (array_new.max() + 1e-2)
+    try:
+        assert array_new.max() > 0., "````"
+        shape_new = array_new.shape
+        shape_old = array_old.shape
+        # Find the mesh of each array.
+        meshx_new = np.linspace(mesh_new[0][0], mesh_new[0][1], shape_new[1])
+        meshy_new = np.linspace(mesh_new[1][0], mesh_new[1][1], shape_new[0])
+        meshx_old = np.linspace(mesh_old[0][0], mesh_old[0][1], shape_old[1])
+        meshy_old = np.linspace(mesh_old[1][0], mesh_old[1][1], shape_old[0])
+        # Find the mesh area of the new array that we are interested in.
+        rangex, rangey = get_image_ratios(array_new, alpha_ratio)
+        array_new, meshx_new, meshy_new = array_new[rangey[0]:rangey[1]+1, rangex[0]:rangex[1]+1], \
+                                          meshx_new[rangex[0]:rangex[1]+1], meshy_new[rangey[0]:rangey[1]+1]
+        # Interpolate the old array to the new mesh.
+        f = interpolate.interp2d(meshx_old, meshy_old, array_old, kind='quintic')
+        array_old = f(meshx_new, meshy_new)
+        return np.sqrt(((array_new - array_old) ** 2).mean()) / array_new.max()
+    except:         # intensity matrix is all zero.
+        return 0.
 
 
 # compute the penalty for runtime.

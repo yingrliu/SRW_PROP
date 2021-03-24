@@ -1,65 +1,218 @@
-#!/usr/bin/env python
-import os
-import srwl_bl
-import srwlib
-
-names = ['M1', 'M1_Grating', 'Grating', 'GA', 'GA_M3A', 'M3A', 'M3', 'M3_SSA', 'SSA', 'SSA_KBAperture', 'KBAperture',
-         'KBh', 'KBh_KBv', 'KBv', 'KBv_Sample', 'Sample']
-
-setting_params = [
-    ['name', 's', 'NSLS-II ESM beamline', 'simulation name'],
-    # ---Data Folder
-    ['fdir', 's', 'cache', 'folder (directory) name for reading-in input and saving output data files']
-]
-
 # tunable list.
 index_list = [(1, 5), (1, 6), (1, 7), (1, 8), (7, 5), (7, 7), (8, 5), (8, 7)]   # (15, 5), (15, 6), (15, 7), (15, 8)
 
-propagation_params = [
-    # ---Propagation parameters
-    ['op_M1_pp', 'f', [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'M1'],
-    ['op_M1_Grating_pp', 'f', [0, 0, 1.0, 1, 0, 1.5, 1.75, 2.75, 3.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-     'M1_Grating'],
-    ['op_Grating_pp', 'f',
-     [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.08093357816613847, 0.996719497113017, 1.0, 0.0],
-     'Grating'],
-    ['op_GA_pp', 'f', [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'GA'],
-    ['op_GA_M3A_pp', 'f', [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'GA_M3A'],
-    ['op_M3A_pp', 'f', [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'M3A'],
-    ['op_M3_pp', 'f', [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'M3'],
-    ['op_M3_SSA_pp', 'f', [0, 0, 1.0, 1, 0, 1.5, 1.0, 2.5, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'M3_SSA'],
-    ['op_SSA_pp', 'f', [0, 0, 1.0, 0, 0, 1.5, 1.0, 2.5, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'SSA'],
-    ['op_SSA_KBAperture_pp', 'f', [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-     'SSA_KBAperture'],
-    ['op_KBAperture_pp', 'f', [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-     'KBAperture'],
-    ['op_KBh_pp', 'f', [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBh'],
-    ['op_KBh_KBv_pp', 'f', [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBh_KBv'],
-    ['op_KBv_pp', 'f', [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBv'],
-    ['op_KBv_Sample_pp', 'f', [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-     'KBv_Sample'],
-    ['op_fin_pp', 'f', [0, 0, 1.0, 0, 1, 0.07, 1.5, 0.07, 6.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-     'final post-propagation (resize) parameters'],
-    # [ 0]: Auto-Resize (1) or not (0) Before propagation
-    # [ 1]: Auto-Resize (1) or not (0) After propagation
-    # [ 2]: Relative Precision for propagation with Auto-Resizing (1. is nominal)
-    # [ 3]: Allow (1) or not (0) for semi-analytical treatment of the quadratic (leading) phase terms at the propagation
-    # [ 4]: Do any Resizing on Fourier side, using FFT, (1) or not (0)
-    # [ 5]: Horizontal Range modification factor at Resizing (1. means no modification)
-    # [ 6]: Horizontal Resolution modification factor at Resizing
-    # [ 7]: Vertical Range modification factor at Resizing
-    # [ 8]: Vertical Resolution modification factor at Resizing
-    # [ 9]: Type of wavefront Shift before Resizing (not yet implemented)
-    # [10]: New Horizontal wavefront Center position after Shift (not yet implemented)
-    # [11]: New Vertical wavefront Center position after Shift (not yet implemented)
-    # [12]: Optional: Orientation of the Output Optical Axis vector in the Incident Beam Frame: Horizontal Coordinate
-    # [13]: Optional: Orientation of the Output Optical Axis vector in the Incident Beam Frame: Vertical Coordinate
-    # [14]: Optional: Orientation of the Output Optical Axis vector in the Incident Beam Frame: Longitudinal Coordinate
-    # [15]: Optional: Orientation of the Horizontal Base vector of the Output Frame in the Incident Beam Frame: Horizontal Coordinate
-    # [16]: Optional: Orientation of the Horizontal Base vector of the Output Frame in the Incident Beam Frame: Vertical Coordinate
-]
+#!/usr/bin/env python
+import os
+try:
+    __IPYTHON__
+    import sys
+    del sys.argv[1:]
+except:
+    pass
 
-physics_params = [
+
+import srwl_bl
+import srwlib
+import srwlpy
+import math
+import srwl_uti_smp
+
+
+def set_optics(v=None):
+    el = []
+    pp = []
+    names = ['M1', 'M1_Grating', 'Grating', 'GA', 'GA_M3A', 'M3A', 'M3', 'M3_SSA', 'SSA', 'SSA_KBAperture', 'KBAperture', 'KBh', 'KBh_KBv', 'KBv', 'KBv_Sample', 'Sample']
+    for el_name in names:
+        if el_name == 'M1':
+            # M1: mirror 34.366m
+            mirror_file = v.op_M1_hfn
+            assert os.path.isfile(mirror_file), \
+                'Missing input file {}, required by M1 beamline element'.format(mirror_file)
+            el.append(srwlib.srwl_opt_setup_surf_height_1d(
+                srwlib.srwl_uti_read_data_cols(mirror_file, "\t", 0, 1),
+                _dim=v.op_M1_dim,
+                _ang=abs(v.op_M1_ang),
+                _amp_coef=v.op_M1_amp_coef,
+                _size_x=v.op_M1_size_x,
+                _size_y=v.op_M1_size_y,
+            ))
+            pp.append(v.op_M1_pp)
+        elif el_name == 'M1_Grating':
+            # M1_Grating: drift 34.366m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_M1_Grating_L,
+            ))
+            pp.append(v.op_M1_Grating_pp)
+        elif el_name == 'Grating':
+            # Grating: grating 55.0m
+            mirror = srwlib.SRWLOptMirPl(
+                _size_tang=v.op_Grating_size_tang,
+                _size_sag=v.op_Grating_size_sag,
+                _nvx=v.op_Grating_nvx,
+                _nvy=v.op_Grating_nvy,
+                _nvz=v.op_Grating_nvz,
+                _tvx=v.op_Grating_tvx,
+                _tvy=v.op_Grating_tvy,
+                _x=v.op_Grating_x,
+                _y=v.op_Grating_y,
+            )
+            opEl=srwlib.SRWLOptG(
+                _mirSub=mirror,
+                _m=v.op_Grating_m,
+                _grDen=v.op_Grating_grDen,
+                _grDen1=v.op_Grating_grDen1,
+                _grDen2=v.op_Grating_grDen2,
+                _grDen3=v.op_Grating_grDen3,
+                _grDen4=v.op_Grating_grDen4,
+                _e_avg=v.op_Grating_e_avg,
+                _cff=v.op_Grating_cff,
+                _ang_graz=v.op_Grating_ang,
+                _ang_roll=v.op_Grating_rollAngle,
+            )
+            el.append(opEl)
+            pp.append(v.op_Grating_pp)
+
+        elif el_name == 'GA':
+            # GA: aperture 55.0m
+            el.append(srwlib.SRWLOptA(
+                _shape=v.op_GA_shape,
+                _ap_or_ob='a',
+                _Dx=v.op_GA_Dx,
+                _Dy=v.op_GA_Dy,
+                _x=v.op_GA_x,
+                _y=v.op_GA_y,
+            ))
+            pp.append(v.op_GA_pp)
+        elif el_name == 'GA_M3A':
+            # GA_M3A: drift 55.0m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_GA_M3A_L,
+            ))
+            pp.append(v.op_GA_M3A_pp)
+        elif el_name == 'M3A':
+            # M3A: aperture 89.63m
+            el.append(srwlib.SRWLOptA(
+                _shape=v.op_M3A_shape,
+                _ap_or_ob='a',
+                _Dx=v.op_M3A_Dx,
+                _Dy=v.op_M3A_Dy,
+                _x=v.op_M3A_x,
+                _y=v.op_M3A_y,
+            ))
+            pp.append(v.op_M3A_pp)
+        elif el_name == 'M3':
+            # M3: ellipsoidMirror 89.63m
+            el.append(srwlib.SRWLOptMirEl(
+                _p=v.op_M3_p,
+                _q=v.op_M3_q,
+                _ang_graz=v.op_M3_ang,
+                _size_tang=v.op_M3_size_tang,
+                _size_sag=v.op_M3_size_sag,
+                _nvx=v.op_M3_nvx,
+                _nvy=v.op_M3_nvy,
+                _nvz=v.op_M3_nvz,
+                _tvx=v.op_M3_tvx,
+                _tvy=v.op_M3_tvy,
+                _x=v.op_M3_x,
+                _y=v.op_M3_y,
+            ))
+            pp.append(v.op_M3_pp)
+
+        elif el_name == 'M3_SSA':
+            # M3_SSA: drift 89.63m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_M3_SSA_L,
+            ))
+            pp.append(v.op_M3_SSA_pp)
+        elif el_name == 'SSA':
+            # SSA: aperture 97.636m
+            el.append(srwlib.SRWLOptA(
+                _shape=v.op_SSA_shape,
+                _ap_or_ob='a',
+                _Dx=v.op_SSA_Dx,
+                _Dy=v.op_SSA_Dy,
+                _x=v.op_SSA_x,
+                _y=v.op_SSA_y,
+            ))
+            pp.append(v.op_SSA_pp)
+        elif el_name == 'SSA_KBAperture':
+            # SSA_KBAperture: drift 97.636m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_SSA_KBAperture_L,
+            ))
+            pp.append(v.op_SSA_KBAperture_pp)
+        elif el_name == 'KBAperture':
+            # KBAperture: aperture 103.646m
+            el.append(srwlib.SRWLOptA(
+                _shape=v.op_KBAperture_shape,
+                _ap_or_ob='a',
+                _Dx=v.op_KBAperture_Dx,
+                _Dy=v.op_KBAperture_Dy,
+                _x=v.op_KBAperture_x,
+                _y=v.op_KBAperture_y,
+            ))
+            pp.append(v.op_KBAperture_pp)
+        elif el_name == 'KBh':
+            # KBh: ellipsoidMirror 103.646m
+            el.append(srwlib.SRWLOptMirEl(
+                _p=v.op_KBh_p,
+                _q=v.op_KBh_q,
+                _ang_graz=v.op_KBh_ang,
+                _size_tang=v.op_KBh_size_tang,
+                _size_sag=v.op_KBh_size_sag,
+                _nvx=v.op_KBh_nvx,
+                _nvy=v.op_KBh_nvy,
+                _nvz=v.op_KBh_nvz,
+                _tvx=v.op_KBh_tvx,
+                _tvy=v.op_KBh_tvy,
+                _x=v.op_KBh_x,
+                _y=v.op_KBh_y,
+            ))
+            pp.append(v.op_KBh_pp)
+
+        elif el_name == 'KBh_KBv':
+            # KBh_KBv: drift 103.646m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_KBh_KBv_L,
+            ))
+            pp.append(v.op_KBh_KBv_pp)
+        elif el_name == 'KBv':
+            # KBv: ellipsoidMirror 104.146m
+            el.append(srwlib.SRWLOptMirEl(
+                _p=v.op_KBv_p,
+                _q=v.op_KBv_q,
+                _ang_graz=v.op_KBv_ang,
+                _size_tang=v.op_KBv_size_tang,
+                _size_sag=v.op_KBv_size_sag,
+                _nvx=v.op_KBv_nvx,
+                _nvy=v.op_KBv_nvy,
+                _nvz=v.op_KBv_nvz,
+                _tvx=v.op_KBv_tvx,
+                _tvy=v.op_KBv_tvy,
+                _x=v.op_KBv_x,
+                _y=v.op_KBv_y,
+            ))
+            pp.append(v.op_KBv_pp)
+
+        elif el_name == 'KBv_Sample':
+            # KBv_Sample: drift 104.146m
+            el.append(srwlib.SRWLOptD(
+                _L=v.op_KBv_Sample_L,
+            ))
+            pp.append(v.op_KBv_Sample_pp)
+        elif el_name == 'Sample':
+            # Sample: watch 104.557m
+            pass
+    pp.append(v.op_fin_pp)
+    return srwlib.SRWLOptC(el, pp)
+
+
+varParam = srwl_bl.srwl_uti_ext_options([
+    ['name', 's', 'NSLS-II ESM beamline', 'simulation name'],
+
+#---Data Folder
+    ['fdir', 's', '', 'folder (directory) name for reading-in input and saving output data files'],
+
 #---Electron Beam
     ['ebm_nm', 's', '', 'standard electron beam name'],
     ['ebm_nms', 's', '', 'standard electron beam name suffix: e.g. can be Day1, Final'],
@@ -356,194 +509,57 @@ physics_params = [
 
     # KBv_Sample: drift
     ['op_KBv_Sample_L', 'f', 0.41100000000000136, 'length'],
-]
 
-def set_optics(v=None):
-    el = []
-    pp = []
-    for el_name in names:
-        if el_name == 'M1':
-            # M1: mirror 34.366m
-            mirror_file = v.op_M1_hfn
-            assert os.path.isfile(mirror_file), \
-                'Missing input file {}, required by M1 beamline element'.format(mirror_file)
-            el.append(srwlib.srwl_opt_setup_surf_height_1d(
-                srwlib.srwl_uti_read_data_cols(mirror_file, "\t", 0, 1),
-                _dim=v.op_M1_dim,
-                _ang=abs(v.op_M1_ang),
-                _amp_coef=v.op_M1_amp_coef,
-                _size_x=v.op_M1_size_x,
-                _size_y=v.op_M1_size_y,
-            ))
-            pp.append(v.op_M1_pp)
-        elif el_name == 'M1_Grating':
-            # M1_Grating: drift 34.366m
-            el.append(srwlib.SRWLOptD(
-                _L=v.op_M1_Grating_L,
-            ))
-            pp.append(v.op_M1_Grating_pp)
-        elif el_name == 'Grating':
-            # Grating: grating 55.0m
-            mirror = srwlib.SRWLOptMirPl(
-                _size_tang=v.op_Grating_size_tang,
-                _size_sag=v.op_Grating_size_sag,
-                _nvx=v.op_Grating_nvx,
-                _nvy=v.op_Grating_nvy,
-                _nvz=v.op_Grating_nvz,
-                _tvx=v.op_Grating_tvx,
-                _tvy=v.op_Grating_tvy,
-                _x=v.op_Grating_x,
-                _y=v.op_Grating_y,
-            )
-            opEl=srwlib.SRWLOptG(
-                _mirSub=mirror,
-                _m=v.op_Grating_m,
-                _grDen=v.op_Grating_grDen,
-                _grDen1=v.op_Grating_grDen1,
-                _grDen2=v.op_Grating_grDen2,
-                _grDen3=v.op_Grating_grDen3,
-                _grDen4=v.op_Grating_grDen4,
-                _e_avg=v.op_Grating_e_avg,
-                _cff=v.op_Grating_cff,
-                _ang_graz=v.op_Grating_ang,
-                _ang_roll=v.op_Grating_rollAngle,
-            )
-            el.append(opEl)
-            pp.append(v.op_Grating_pp)
+#---Propagation parameters
+    ['op_M1_pp', 'f',             [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'M1'],
+    ['op_M1_Grating_pp', 'f',     [0, 0, 1.0, 1, 0, 1.5, 1.75, 2.75, 3.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'M1_Grating'],
+    ['op_Grating_pp', 'f',        [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.08093357816613847, 0.996719497113017, 1.0, 0.0], 'Grating'],
+    ['op_GA_pp', 'f',             [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'GA'],
+    ['op_GA_M3A_pp', 'f',         [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'GA_M3A'],
+    ['op_M3A_pp', 'f',            [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'M3A'],
+    ['op_M3_pp', 'f',             [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'M3'],
+    ['op_M3_SSA_pp', 'f',         [0, 0, 1.0, 1, 0, 1.5, 1.0, 2.5, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'M3_SSA'],
+    ['op_SSA_pp', 'f',            [0, 0, 1.0, 0, 0, 1.5, 1.0, 2.5, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'SSA'],
+    ['op_SSA_KBAperture_pp', 'f', [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'SSA_KBAperture'],
+    ['op_KBAperture_pp', 'f',     [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBAperture'],
+    ['op_KBh_pp', 'f',            [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBh'],
+    ['op_KBh_KBv_pp', 'f',        [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBh_KBv'],
+    ['op_KBv_pp', 'f',            [0, 0, 1.0, 0, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBv'],
+    ['op_KBv_Sample_pp', 'f',     [0, 0, 1.0, 1, 0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'KBv_Sample'],
+    ['op_fin_pp', 'f',            [0, 0, 1.0, 0, 1, 0.07, 1.5, 0.07, 6.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 'final post-propagation (resize) parameters'],
+    ['op_rv', 'f', [5], "Multi-Output."]
+    #[ 0]: Auto-Resize (1) or not (0) Before propagation
+    #[ 1]: Auto-Resize (1) or not (0) After propagation
+    #[ 2]: Relative Precision for propagation with Auto-Resizing (1. is nominal)
+    #[ 3]: Allow (1) or not (0) for semi-analytical treatment of the quadratic (leading) phase terms at the propagation
+    #[ 4]: Do any Resizing on Fourier side, using FFT, (1) or not (0)
+    #[ 5]: Horizontal Range modification factor at Resizing (1. means no modification)
+    #[ 6]: Horizontal Resolution modification factor at Resizing
+    #[ 7]: Vertical Range modification factor at Resizing
+    #[ 8]: Vertical Resolution modification factor at Resizing
+    #[ 9]: Type of wavefront Shift before Resizing (not yet implemented)
+    #[10]: New Horizontal wavefront Center position after Shift (not yet implemented)
+    #[11]: New Vertical wavefront Center position after Shift (not yet implemented)
+    #[12]: Optional: Orientation of the Output Optical Axis vector in the Incident Beam Frame: Horizontal Coordinate
+    #[13]: Optional: Orientation of the Output Optical Axis vector in the Incident Beam Frame: Vertical Coordinate
+    #[14]: Optional: Orientation of the Output Optical Axis vector in the Incident Beam Frame: Longitudinal Coordinate
+    #[15]: Optional: Orientation of the Horizontal Base vector of the Output Frame in the Incident Beam Frame: Horizontal Coordinate
+    #[16]: Optional: Orientation of the Horizontal Base vector of the Output Frame in the Incident Beam Frame: Vertical Coordinate
+])
 
-        elif el_name == 'GA':
-            # GA: aperture 55.0m
-            el.append(srwlib.SRWLOptA(
-                _shape=v.op_GA_shape,
-                _ap_or_ob='a',
-                _Dx=v.op_GA_Dx,
-                _Dy=v.op_GA_Dy,
-                _x=v.op_GA_x,
-                _y=v.op_GA_y,
-            ))
-            pp.append(v.op_GA_pp)
-        elif el_name == 'GA_M3A':
-            # GA_M3A: drift 55.0m
-            el.append(srwlib.SRWLOptD(
-                _L=v.op_GA_M3A_L,
-            ))
-            pp.append(v.op_GA_M3A_pp)
-        elif el_name == 'M3A':
-            # M3A: aperture 89.63m
-            el.append(srwlib.SRWLOptA(
-                _shape=v.op_M3A_shape,
-                _ap_or_ob='a',
-                _Dx=v.op_M3A_Dx,
-                _Dy=v.op_M3A_Dy,
-                _x=v.op_M3A_x,
-                _y=v.op_M3A_y,
-            ))
-            pp.append(v.op_M3A_pp)
-        elif el_name == 'M3':
-            # M3: ellipsoidMirror 89.63m
-            el.append(srwlib.SRWLOptMirEl(
-                _p=v.op_M3_p,
-                _q=v.op_M3_q,
-                _ang_graz=v.op_M3_ang,
-                _size_tang=v.op_M3_size_tang,
-                _size_sag=v.op_M3_size_sag,
-                _nvx=v.op_M3_nvx,
-                _nvy=v.op_M3_nvy,
-                _nvz=v.op_M3_nvz,
-                _tvx=v.op_M3_tvx,
-                _tvy=v.op_M3_tvy,
-                _x=v.op_M3_x,
-                _y=v.op_M3_y,
-            ))
-            pp.append(v.op_M3_pp)
 
-        elif el_name == 'M3_SSA':
-            # M3_SSA: drift 89.63m
-            el.append(srwlib.SRWLOptD(
-                _L=v.op_M3_SSA_L,
-            ))
-            pp.append(v.op_M3_SSA_pp)
-        elif el_name == 'SSA':
-            # SSA: aperture 97.636m
-            el.append(srwlib.SRWLOptA(
-                _shape=v.op_SSA_shape,
-                _ap_or_ob='a',
-                _Dx=v.op_SSA_Dx,
-                _Dy=v.op_SSA_Dy,
-                _x=v.op_SSA_x,
-                _y=v.op_SSA_y,
-            ))
-            pp.append(v.op_SSA_pp)
-        elif el_name == 'SSA_KBAperture':
-            # SSA_KBAperture: drift 97.636m
-            el.append(srwlib.SRWLOptD(
-                _L=v.op_SSA_KBAperture_L,
-            ))
-            pp.append(v.op_SSA_KBAperture_pp)
-        elif el_name == 'KBAperture':
-            # KBAperture: aperture 103.646m
-            el.append(srwlib.SRWLOptA(
-                _shape=v.op_KBAperture_shape,
-                _ap_or_ob='a',
-                _Dx=v.op_KBAperture_Dx,
-                _Dy=v.op_KBAperture_Dy,
-                _x=v.op_KBAperture_x,
-                _y=v.op_KBAperture_y,
-            ))
-            pp.append(v.op_KBAperture_pp)
-        elif el_name == 'KBh':
-            # KBh: ellipsoidMirror 103.646m
-            el.append(srwlib.SRWLOptMirEl(
-                _p=v.op_KBh_p,
-                _q=v.op_KBh_q,
-                _ang_graz=v.op_KBh_ang,
-                _size_tang=v.op_KBh_size_tang,
-                _size_sag=v.op_KBh_size_sag,
-                _nvx=v.op_KBh_nvx,
-                _nvy=v.op_KBh_nvy,
-                _nvz=v.op_KBh_nvz,
-                _tvx=v.op_KBh_tvx,
-                _tvy=v.op_KBh_tvy,
-                _x=v.op_KBh_x,
-                _y=v.op_KBh_y,
-            ))
-            pp.append(v.op_KBh_pp)
+def main():
+    v = srwl_bl.srwl_uti_parse_options(varParam, use_sys_argv=True)
+    op = set_optics(v)
+    v.ws = True
+    v.ws_pl = 'xy'
+    mag = None
+    if v.rs_type == 'm':
+        mag = srwlib.SRWLMagFldC()
+        mag.arXc.append(0)
+        mag.arYc.append(0)
+        mag.arMagFld.append(srwlib.SRWLMagFldM(v.mp_field, v.mp_order, v.mp_distribution, v.mp_len))
+        mag.arZc.append(v.mp_zc)
+    srwl_bl.SRWLBeamline(_name=v.name, _mag_approx=mag).calc_all(v, op)
 
-        elif el_name == 'KBh_KBv':
-            # KBh_KBv: drift 103.646m
-            el.append(srwlib.SRWLOptD(
-                _L=v.op_KBh_KBv_L,
-            ))
-            pp.append(v.op_KBh_KBv_pp)
-        elif el_name == 'KBv':
-            # KBv: ellipsoidMirror 104.146m
-            el.append(srwlib.SRWLOptMirEl(
-                _p=v.op_KBv_p,
-                _q=v.op_KBv_q,
-                _ang_graz=v.op_KBv_ang,
-                _size_tang=v.op_KBv_size_tang,
-                _size_sag=v.op_KBv_size_sag,
-                _nvx=v.op_KBv_nvx,
-                _nvy=v.op_KBv_nvy,
-                _nvz=v.op_KBv_nvz,
-                _tvx=v.op_KBv_tvx,
-                _tvy=v.op_KBv_tvy,
-                _x=v.op_KBv_x,
-                _y=v.op_KBv_y,
-            ))
-            pp.append(v.op_KBv_pp)
-
-        elif el_name == 'KBv_Sample':
-            # KBv_Sample: drift 104.146m
-            el.append(srwlib.SRWLOptD(
-                _L=v.op_KBv_Sample_L,
-            ))
-            pp.append(v.op_KBv_Sample_pp)
-        elif el_name == 'Sample':
-            # Sample: watch 104.557m
-            pass
-    pp.append(v.op_fin_pp)
-    return srwlib.SRWLOptC(el, pp)
-
-# set-up functions.
-set_up_funcs = [set_optics]
+main()

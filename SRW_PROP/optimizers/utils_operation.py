@@ -2,6 +2,18 @@
 # Institute: Stony Brook University
 # auxiliary functions to modulate the propagation parameters.
 
+# split the paramters into physics and propagation parameters.
+def split_params(params):
+    index, cache = None, None
+    for n, p in enumerate(params):
+        if p[0] == 'fdir':
+            cache = p[2]
+        if p[0][-3:] == '_pp':
+            index = n
+            break
+    assert index is not None, "No propagation parameters in the params."
+    return params[0:index], params[index:], cache
+
 # Update the value of the range parameter positioned by the index.
 def update_range(prop_params, index, value):
     if index[-1] not in (5, 7):
@@ -38,7 +50,4 @@ def update_prop_params(prop_params, index_list, value_list):
         #     update_range(prop_params, index, value_list[n])
         updata_param(prop_params, index, value_list[n])
 
-# save the propagation parameters as .json file.
-def save_prop_params(prop_params, saveto=None):
-    pass
 
